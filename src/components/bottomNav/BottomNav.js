@@ -10,14 +10,13 @@ export default function SimpleBottomNavigation() {
     const [value, setValue] = React.useState(0);
 
     return (
-        <Paper sx={{position: 'fixed', bottom: 0, left: 0, right: 0}} elevation={3}>
+        <Paper sx={{position: 'fixed', bottom: 0, left: 0, right: 0, height: '56px'}} elevation={3}>
             <BottomNavigation
                 showLabels
                 value={value}
                 onChange={(event, newValue) => {
                     setValue(newValue);
-                }}
-            >
+                }}>
                 <BottomNavigationAction label="Recents" icon={<RestoreIcon/>}/>
                 <BottomNavigationAction label="Favorites" icon={<FavoriteIcon/>}/>
                 <BottomNavigationAction label="Location" icon={<LocationOnIcon/>}/>

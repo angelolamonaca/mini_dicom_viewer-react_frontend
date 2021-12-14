@@ -7,7 +7,7 @@ import MenuIcon from '@mui/icons-material/Menu';
 
 export default function ButtonAppBar() {
     return (
-        <AppBar position="static" elevation={3}>
+        <AppBar position="sticky" sx={{height: '56px'}}>
             <Toolbar>
                 <IconButton
                     size="large"

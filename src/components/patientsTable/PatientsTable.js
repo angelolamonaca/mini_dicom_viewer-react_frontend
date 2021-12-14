@@ -13,13 +13,15 @@ import Typography from '@mui/material/Typography';
 import Paper from '@mui/material/Paper';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
+import EditIcon from '@mui/icons-material/Edit';
+import InfoIcon from '@mui/icons-material/Info';
+import StarBorderIcon from '@mui/icons-material/StarBorder';
 
-function createData(patientId, patientName, createdAt, updatedAt) {
+function createData(patientId, patientName, numberOfStudies) {
     return {
         patientId,
         patientName,
-        createdAt,
-        updatedAt,
+        numberOfStudies,
         studies: [
             {
                 studyId: 0,
@@ -37,11 +39,42 @@ function createData(patientId, patientName, createdAt, updatedAt) {
     };
 }
 
+
+export default function CollapsibleTable() {
+    return (
+        <Box>
+            <TableContainer component={Paper} sx={{height: 'calc(100vh - 56px - 56px)', marginBottom: '56px'}}>
+                <Table stickyHeader aria-label="collapsible table">
+
+                    <TableHead>
+                        <TableRow sx={{fontWeight: 700}}>
+                            <TableCell/>
+                            <TableCell align="center">Patient</TableCell>
+                            <TableCell align="center">Studies</TableCell>
+                            <TableCell/>
+                            <TableCell/>
+                            <TableCell/>
+                        </TableRow>
+                    </TableHead>
+
+                    <TableBody>
+                        {rows.map((row) => (
+                            <Row key={row.patientId} row={row}/>
+                        ))}
+                    </TableBody>
+
+                </Table>
+            </TableContainer>
+        </Box>
+    );
+}
+
 function Row(props) {
     const {row} = props;
     const [open, setOpen] = React.useState(false);
     return (
         <React.Fragment>
+
             <TableRow sx={{'& > *': {borderBottom: 'unset'}}}>
                 <TableCell>
                     <IconButton
@@ -51,12 +84,38 @@ function Row(props) {
                         {open ? <KeyboardArrowUpIcon/> : <KeyboardArrowDownIcon/>}
                     </IconButton>
                 </TableCell>
-                <TableCell component="th" scope="row">
+                <TableCell align="center" component="th" scope="row">
                     {row.patientName}
                 </TableCell>
-                <TableCell align="right">{row.createdAt}</TableCell>
-                <TableCell align="right">{row.updatedAt}</TableCell>
+                <TableCell align="center">
+                    {row.numberOfStudies}
+                </TableCell>
+                <TableCell align="center" padding={'checkbox'}>
+                    <IconButton
+                        aria-label="info"
+                        size="small"
+                        onClick={() => setOpen(!open)}>
+                        <InfoIcon/>
+                    </IconButton>
+                </TableCell>
+                <TableCell align="center" padding={'checkbox'}>
+                    <IconButton
+                        aria-label="edit"
+                        size="small"
+                        onClick={() => setOpen(!open)}>
+                        <EditIcon/>
+                    </IconButton>
+                </TableCell>
+                <TableCell align="center" padding={'checkbox'}>
+                    <IconButton
+                        aria-label="edit"
+                        size="small"
+                        onClick={() => setOpen(!open)}>
+                        <StarBorderIcon/>
+                    </IconButton>
+                </TableCell>
             </TableRow>
+
             <TableRow>
                 <TableCell style={{paddingBottom: 0, paddingTop: 0}} colSpan={6}>
                     <Collapse in={open} timeout="auto" unmountOnExit>
@@ -65,13 +124,15 @@ function Row(props) {
                                 Studies
                             </Typography>
                             <Table size="small" aria-label="purchases">
+
                                 <TableHead>
                                     <TableRow>
-                                        <TableCell>studyName</TableCell>
-                                        <TableCell>createdAt</TableCell>
-                                        <TableCell>updatedAt</TableCell>
+                                        <TableCell>Study Name</TableCell>
+                                        <TableCell>Created At</TableCell>
+                                        <TableCell>Updated At</TableCell>
                                     </TableRow>
                                 </TableHead>
+
                                 <TableBody>
                                     {row.studies.map((studyRow) => (
                                         <TableRow key={studyRow.studyId}>
@@ -85,6 +146,7 @@ function Row(props) {
                                         </TableRow>
                                     ))}
                                 </TableBody>
+
                             </Table>
                         </Box>
                     </Collapse>
@@ -97,8 +159,7 @@ function Row(props) {
 Row.propTypes = {
     row: PropTypes.shape({
         patientName: PropTypes.string.isRequired,
-        createdAt: PropTypes.string.isRequired,
-        updatedAt: PropTypes.string.isRequired,
+        numberOfStudies: PropTypes.number.isRequired,
         studies: PropTypes.arrayOf(
             PropTypes.shape({
                 studyName: PropTypes.string.isRequired,
@@ -110,46 +171,19 @@ Row.propTypes = {
 };
 
 const rows = [
-    createData(0,'Will Smith', Date(), Date()),
-    createData(1,'Emma Watson', Date(), Date()),
-    createData(2,'Bill Gates', Date(), Date()),
-    createData(3,'Jeff Bezos', Date(), Date()),
-    createData(4,'Tom Ford', Date(), Date()),
-    createData(301,'Will Smith', Date(), Date()),
-    createData(11,'Emma Watson', Date(), Date()),
-    createData(21,'Bill Gates', Date(), Date()),
-    createData(31,'Jeff Bezos', Date(), Date()),
-    createData(41,'Tom Ford', Date(), Date()),
-    createData(302,'Will Smith', Date(), Date()),
-    createData(12,'Emma Watson', Date(), Date()),
-    createData(22,'Bill Gates', Date(), Date()),
-    createData(32,'Jeff Bezos', Date(), Date()),
-    createData(42,'Tom Ford', Date(), Date()),
-    createData(303,'Will Smith', Date(), Date()),
-    createData(13,'Emma Watson', Date(), Date()),
-    createData(23,'Bill Gates', Date(), Date()),
-    createData(33,'Jeff Bezos', Date(), Date()),
-    createData(43,'Tom Ford', Date(), Date()),
+    createData(0, 'Will Smith', 234),
+    createData(1, 'Emma Watson', 42),
+    createData(2, 'Bill Gates', 12),
+    createData(3, 'Jeff Bezos', 42),
+    createData(4, 'Tom Ford', 432),
+    createData(10, 'Will Smith', 234),
+    createData(11, 'Emma Watson', 42),
+    createData(12, 'Bill Gates', 12),
+    createData(13, 'Jeff Bezos', 42),
+    createData(14, 'Tom Ford', 432),
+    createData(10, 'Will Smith', 234),
+    createData(11, 'Emma Watson', 42),
+    createData(12, 'Bill Gates', 12),
+    createData(13, 'Jeff Bezos', 42),
+    createData(14, 'Tom Ford', 432),
 ];
-
-export default function CollapsibleTable() {
-    return (
-        <TableContainer component={Paper} sx={{maxHeight: '80vh'}}>
-            <Table stickyHeader aria-label="collapsible table">
-                <TableHead>
-                    <TableRow>
-                        <TableCell/>
-                        <TableCell>Patient Name</TableCell>
-                        <TableCell align="right">Created At</TableCell>
-                        <TableCell align="right">Updated At</TableCell>
-                    </TableRow>
-                </TableHead>
-                <TableBody>
-                    {rows.map((row) => (
-                        <Row key={row.patientId} row={row}/>
-                    ))}
-                </TableBody>
-            </Table>
-        </TableContainer>
-    );
-}
