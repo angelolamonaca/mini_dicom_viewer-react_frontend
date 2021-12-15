@@ -17,6 +17,7 @@ import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import {getAllPatients} from "../../services/patientService";
 import InfoTwoToneIcon from '@mui/icons-material/InfoTwoTone';
 import DeleteTwoToneIcon from '@mui/icons-material/DeleteTwoTone';
+import EditTwoToneIcon from '@mui/icons-material/EditTwoTone';
 import {blue, red} from "@mui/material/colors";
 
 export default function CollapsibleTable() {
@@ -47,7 +48,6 @@ export default function CollapsibleTable() {
                             <TableCell align="center">Patient ID</TableCell>
                             <TableCell align="center">Patient Name</TableCell>
                             <TableCell align="center">Created At</TableCell>
-                            <TableCell align="center"/>
                             <TableCell align="center"/>
                         </TableRow>
                     </TableHead>
@@ -87,20 +87,12 @@ function Row(props) {
                 <TableCell align="center">
                     {new Date(parseInt(row.createdAt)).toLocaleString()}
                 </TableCell>
-                <TableCell align="center" padding={'checkbox'}>
-                    <IconButton
-                        aria-label="info"
-                        size="small"
-                        onClick={() => setOpen(!open)}>
-                        <InfoTwoToneIcon/>
-                    </IconButton>
-                </TableCell>
                 <TableCell align="center" padding={'normal'}>
                     <IconButton
                         aria-label="edit"
                         size="small"
                         onClick={() => setOpen(!open)}>
-                        <DeleteTwoToneIcon sx={{color: red[500]}}/>
+                        <EditTwoToneIcon sx={{color: "#ffc000"}}/>
                     </IconButton>
                 </TableCell>
             </TableRow>
