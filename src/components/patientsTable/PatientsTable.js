@@ -1,4 +1,5 @@
 import * as React from 'react';
+import {useEffect, useState} from 'react';
 import PropTypes from 'prop-types';
 import Box from '@mui/material/Box';
 import Collapse from '@mui/material/Collapse';
@@ -16,31 +17,26 @@ import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import EditIcon from '@mui/icons-material/Edit';
 import InfoIcon from '@mui/icons-material/Info';
 import StarBorderIcon from '@mui/icons-material/StarBorder';
-
-function createData(patientId, patientName, numberOfStudies) {
-    return {
-        patientId,
-        patientName,
-        numberOfStudies,
-        studies: [
-            {
-                studyId: 0,
-                studyName: 'Lorem Ipsum',
-                createdAt: Date(),
-                updatedAt: Date(),
-            },
-            {
-                studyId: 1,
-                studyName: 'Lorem Ipsum',
-                createdAt: Date(),
-                updatedAt: Date(),
-            }
-        ],
-    };
-}
-
+import {getAllPatients} from "../../services/patientService";
 
 export default function CollapsibleTable() {
+    const [data, setData] = useState({
+        patients: [{
+            id: '',
+            name: '',
+            createdAt: '',
+            updatedAt: '',
+            studies: [{id: '', studyName: '', createdAt: '', updatedAt: ''}]
+        }]
+    });
+    useEffect(() => {
+        async function fetchData() {
+            const result = await getAllPatients();
+            setData({patients: result.data.data.getAllPatients});
+        }
+
+        fetchData();
+    }, [data.patients]);
     return (
         <Box>
             <TableContainer component={Paper} sx={{height: 'calc(100vh - 56px - 56px)', marginBottom: '56px'}}>
@@ -50,7 +46,7 @@ export default function CollapsibleTable() {
                         <TableRow sx={{fontWeight: 700}}>
                             <TableCell/>
                             <TableCell align="center">Patient</TableCell>
-                            <TableCell align="center">Studies</TableCell>
+                            <TableCell align="center">Created At</TableCell>
                             <TableCell/>
                             <TableCell/>
                             <TableCell/>
@@ -58,8 +54,8 @@ export default function CollapsibleTable() {
                     </TableHead>
 
                     <TableBody>
-                        {rows.map((row) => (
-                            <Row key={row.patientId} row={row}/>
+                        {data.patients.map((patient) => (
+                            <Row key={patient.id} row={patient}/>
                         ))}
                     </TableBody>
 
@@ -74,7 +70,6 @@ function Row(props) {
     const [open, setOpen] = React.useState(false);
     return (
         <React.Fragment>
-
             <TableRow sx={{'& > *': {borderBottom: 'unset'}}}>
                 <TableCell>
                     <IconButton
@@ -85,10 +80,10 @@ function Row(props) {
                     </IconButton>
                 </TableCell>
                 <TableCell align="center" component="th" scope="row">
-                    {row.patientName}
+                    {row.name}
                 </TableCell>
                 <TableCell align="center">
-                    {row.numberOfStudies}
+                    {new Date(parseInt(row.createdAt)).toLocaleString()}
                 </TableCell>
                 <TableCell align="center" padding={'checkbox'}>
                     <IconButton
@@ -120,29 +115,31 @@ function Row(props) {
                 <TableCell style={{paddingBottom: 0, paddingTop: 0}} colSpan={6}>
                     <Collapse in={open} timeout="auto" unmountOnExit>
                         <Box sx={{margin: 1}}>
-                            <Typography variant="h6" gutterBottom component="div">
+                            <Typography variant="h6" gutterBottom component="div" align="center">
                                 Studies
                             </Typography>
                             <Table size="small" aria-label="purchases">
 
                                 <TableHead>
                                     <TableRow>
-                                        <TableCell>Study Name</TableCell>
-                                        <TableCell>Created At</TableCell>
-                                        <TableCell>Updated At</TableCell>
+                                        <TableCell align="center">Study Name</TableCell>
+                                        <TableCell align="center">Created At</TableCell>
+                                        <TableCell align="center">Updated At</TableCell>
                                     </TableRow>
                                 </TableHead>
 
                                 <TableBody>
-                                    {row.studies.map((studyRow) => (
-                                        <TableRow key={studyRow.studyId}>
-                                            <TableCell component="th" scope="row">
-                                                {studyRow.studyName}
+                                    {row.studies.map((studies) => (
+                                        <TableRow key={studies.id}>
+                                            <TableCell align="center" component="th" scope="row">
+                                                {studies.studyName}
                                             </TableCell>
-                                            <TableCell component="th" scope="row">
-                                                {studyRow.createdAt}
+                                            <TableCell align="center" component="th" scope="row">
+                                                {new Date(parseInt(studies.createdAt)).toLocaleString()}
                                             </TableCell>
-                                            <TableCell>{studyRow.updatedAt}</TableCell>
+                                            <TableCell align="center">
+                                                {new Date(parseInt(studies.createdAt)).toLocaleString()}
+                                            </TableCell>
                                         </TableRow>
                                     ))}
                                 </TableBody>
@@ -158,32 +155,14 @@ function Row(props) {
 
 Row.propTypes = {
     row: PropTypes.shape({
-        patientName: PropTypes.string.isRequired,
-        numberOfStudies: PropTypes.number.isRequired,
+        name: PropTypes.string.isRequired,
+        createdAt: PropTypes.string.isRequired,
         studies: PropTypes.arrayOf(
             PropTypes.shape({
                 studyName: PropTypes.string.isRequired,
                 createdAt: PropTypes.string.isRequired,
                 updatedAt: PropTypes.string.isRequired,
             }),
-        ).isRequired
+        )
     }).isRequired,
 };
-
-const rows = [
-    createData(0, 'Will Smith', 234),
-    createData(1, 'Emma Watson', 42),
-    createData(2, 'Bill Gates', 12),
-    createData(3, 'Jeff Bezos', 42),
-    createData(4, 'Tom Ford', 432),
-    createData(10, 'Will Smith', 234),
-    createData(11, 'Emma Watson', 42),
-    createData(12, 'Bill Gates', 12),
-    createData(13, 'Jeff Bezos', 42),
-    createData(14, 'Tom Ford', 432),
-    createData(10, 'Will Smith', 234),
-    createData(11, 'Emma Watson', 42),
-    createData(12, 'Bill Gates', 12),
-    createData(13, 'Jeff Bezos', 42),
-    createData(14, 'Tom Ford', 432),
-];
