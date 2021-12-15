@@ -10,7 +10,7 @@ import ModalityDetails from "./pages/ModalityDetails";
 import NoPage from "./pages/NoPage";
 import './index.css'
 
-export default function App() {
+function App() {
     return (
         <BrowserRouter>
             <Routes>

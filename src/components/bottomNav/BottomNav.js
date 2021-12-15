@@ -5,6 +5,9 @@ import RestoreIcon from '@mui/icons-material/Restore';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import Paper from "@mui/material/Paper";
+import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
+import BarChartOutlinedIcon from '@mui/icons-material/BarChartOutlined';
+import AccountTreeOutlinedIcon from '@mui/icons-material/AccountTreeOutlined';
 
 export default function SimpleBottomNavigation() {
     const [value, setValue] = React.useState(0);
@@ -17,9 +20,9 @@ export default function SimpleBottomNavigation() {
                 onChange={(event, newValue) => {
                     setValue(newValue);
                 }}>
-                <BottomNavigationAction label="Recents" icon={<RestoreIcon/>}/>
-                <BottomNavigationAction label="Favorites" icon={<FavoriteIcon/>}/>
-                <BottomNavigationAction label="Location" icon={<LocationOnIcon/>}/>
+                <BottomNavigationAction label="Explore" icon={<SearchOutlinedIcon/>}/>
+                <BottomNavigationAction label="Statistics" icon={<BarChartOutlinedIcon/>}/>
+                <BottomNavigationAction label="TreeView" icon={<AccountTreeOutlinedIcon/>}/>
             </BottomNavigation>
         </Paper>
     );

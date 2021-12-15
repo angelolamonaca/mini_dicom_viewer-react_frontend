@@ -14,10 +14,10 @@ import Typography from '@mui/material/Typography';
 import Paper from '@mui/material/Paper';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
-import EditIcon from '@mui/icons-material/Edit';
-import InfoIcon from '@mui/icons-material/Info';
-import StarBorderIcon from '@mui/icons-material/StarBorder';
 import {getAllPatients} from "../../services/patientService";
+import InfoTwoToneIcon from '@mui/icons-material/InfoTwoTone';
+import DeleteTwoToneIcon from '@mui/icons-material/DeleteTwoTone';
+import {blue, red} from "@mui/material/colors";
 
 export default function CollapsibleTable() {
     const [data, setData] = useState({
@@ -25,8 +25,7 @@ export default function CollapsibleTable() {
             id: '',
             name: '',
             createdAt: '',
-            updatedAt: '',
-            studies: [{id: '', studyName: '', createdAt: '', updatedAt: ''}]
+            studies: [{id: '', studyName: '', createdAt: ''}]
         }]
     });
     useEffect(() => {
@@ -36,7 +35,7 @@ export default function CollapsibleTable() {
         }
 
         fetchData();
-    }, [data.patients]);
+    }, []);
     return (
         <Box>
             <TableContainer component={Paper} sx={{height: 'calc(100vh - 56px - 56px)', marginBottom: '56px'}}>
@@ -45,11 +44,11 @@ export default function CollapsibleTable() {
                     <TableHead>
                         <TableRow sx={{fontWeight: 700}}>
                             <TableCell/>
-                            <TableCell align="center">Patient</TableCell>
+                            <TableCell align="center">Patient ID</TableCell>
+                            <TableCell align="center">Patient Name</TableCell>
                             <TableCell align="center">Created At</TableCell>
-                            <TableCell/>
-                            <TableCell/>
-                            <TableCell/>
+                            <TableCell align="center"/>
+                            <TableCell align="center"/>
                         </TableRow>
                     </TableHead>
 
@@ -80,6 +79,9 @@ function Row(props) {
                     </IconButton>
                 </TableCell>
                 <TableCell align="center" component="th" scope="row">
+                    {row.id}
+                </TableCell>
+                <TableCell align="center" component="th" scope="row">
                     {row.name}
                 </TableCell>
                 <TableCell align="center">
@@ -90,29 +92,21 @@ function Row(props) {
                         aria-label="info"
                         size="small"
                         onClick={() => setOpen(!open)}>
-                        <InfoIcon/>
+                        <InfoTwoToneIcon/>
                     </IconButton>
                 </TableCell>
-                <TableCell align="center" padding={'checkbox'}>
+                <TableCell align="center" padding={'normal'}>
                     <IconButton
                         aria-label="edit"
                         size="small"
                         onClick={() => setOpen(!open)}>
-                        <EditIcon/>
-                    </IconButton>
-                </TableCell>
-                <TableCell align="center" padding={'checkbox'}>
-                    <IconButton
-                        aria-label="edit"
-                        size="small"
-                        onClick={() => setOpen(!open)}>
-                        <StarBorderIcon/>
+                        <DeleteTwoToneIcon sx={{color: red[500]}}/>
                     </IconButton>
                 </TableCell>
             </TableRow>
 
             <TableRow>
-                <TableCell style={{paddingBottom: 0, paddingTop: 0}} colSpan={6}>
+                <TableCell style={{paddingBottom: 0, paddingTop: 0, backgroundColor: "#daf2ff"}} colSpan={6}>
                     <Collapse in={open} timeout="auto" unmountOnExit>
                         <Box sx={{margin: 1}}>
                             <Typography variant="h6" gutterBottom component="div" align="center">
@@ -122,9 +116,11 @@ function Row(props) {
 
                                 <TableHead>
                                     <TableRow>
+                                        <TableCell align="center">Study ID</TableCell>
                                         <TableCell align="center">Study Name</TableCell>
                                         <TableCell align="center">Created At</TableCell>
-                                        <TableCell align="center">Updated At</TableCell>
+                                        <TableCell align="center"/>
+                                        <TableCell align="center"/>
                                     </TableRow>
                                 </TableHead>
 
@@ -132,13 +128,30 @@ function Row(props) {
                                     {row.studies.map((studies) => (
                                         <TableRow key={studies.id}>
                                             <TableCell align="center" component="th" scope="row">
+                                                {studies.id}
+                                            </TableCell>
+                                            <TableCell align="center" component="th" scope="row">
                                                 {studies.studyName}
                                             </TableCell>
                                             <TableCell align="center" component="th" scope="row">
                                                 {new Date(parseInt(studies.createdAt)).toLocaleString()}
                                             </TableCell>
-                                            <TableCell align="center">
-                                                {new Date(parseInt(studies.createdAt)).toLocaleString()}
+
+                                            <TableCell align="center" padding={'checkbox'}>
+                                                <IconButton
+                                                    aria-label="info"
+                                                    size="small"
+                                                    onClick={() => setOpen(!open)}>
+                                                    <InfoTwoToneIcon sx={{color: blue[500]}}/>
+                                                </IconButton>
+                                            </TableCell>
+                                            <TableCell align="center" padding={'normal'}>
+                                                <IconButton
+                                                    aria-label="edit"
+                                                    size="small"
+                                                    onClick={() => setOpen(!open)}>
+                                                    <DeleteTwoToneIcon sx={{color: red[500]}}/>
+                                                </IconButton>
                                             </TableCell>
                                         </TableRow>
                                     ))}
@@ -161,7 +174,6 @@ Row.propTypes = {
             PropTypes.shape({
                 studyName: PropTypes.string.isRequired,
                 createdAt: PropTypes.string.isRequired,
-                updatedAt: PropTypes.string.isRequired,
             }),
         )
     }).isRequired,
