@@ -25,7 +25,7 @@ export default function SimpleContainer() {
         }
 
         fetchData();
-    }, []);
+    }, [id]);
 
     const [errorMessage, setErrorMessage] = useState("");
     useEffect(() => {
