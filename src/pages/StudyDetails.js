@@ -11,7 +11,7 @@ import Typography from "@mui/material/Typography";
 import {useNavigate, useParams} from "react-router";
 import {Grid, Tooltip} from "@mui/material";
 import Folder from '../assets/images/folder_icon.png';
-import {getSingleStudy, getSingleStudyWithSeries} from "../services/studyService";
+import {getSingleStudyWithSeries} from "../services/studyService";
 
 export default function TitlebarImageList() {
     const [width, setWidth] = useState(window.innerWidth);
@@ -35,7 +35,7 @@ export default function TitlebarImageList() {
             studyName: '',
             createdAt: '',
             updatedAt: '',
-            series: [{id: '', seriesName: '', createdAt: '', updatedAt: ''}]
+            series: [{id: '', seriesName: '', idModality: '', createdAt: '', updatedAt: ''}]
         }
     });
     useEffect(() => {
@@ -43,6 +43,7 @@ export default function TitlebarImageList() {
             const result = await getSingleStudyWithSeries(id);
             setStudyState({study: result.data.data.getSingleStudy});
         }
+
         fetchData();
     }, [id]);
     const navigate = useNavigate();
@@ -78,21 +79,24 @@ export default function TitlebarImageList() {
                         <img
                             src={Folder}
                             alt={series.seriesName}
-                            style={{cursor:'pointer'}}
+                            style={{cursor: 'pointer'}}
                             onClick={() => goSeriesDetail(series.id)}
                             loading="lazy"
                         />
                         <ImageListItemBar
                             title={series.seriesName}
-                            subtitle={'Series ID: ' + series.id}
+                            subtitle={<ul>
+                                <li>{`Series ID: ${series.id}`},</li>
+                                <li>{`Modality ID: ${series.idModality}`}</li>
+                            </ul>}
                             actionIcon={
                                 <Tooltip title={`Created at ${new Date(parseInt(series.createdAt)).toLocaleString()}`}>
-                                <IconButton
-                                    sx={{color: 'rgba(255, 255, 255, 0.54)'}}
-                                    aria-label={`info about ${series.seriesName}`}
-                                >
-                                    <InfoIcon/>
-                                </IconButton>
+                                    <IconButton
+                                        sx={{color: 'rgba(255, 255, 255, 0.54)'}}
+                                        aria-label={`info about ${series.seriesName}`}
+                                    >
+                                        <InfoIcon/>
+                                    </IconButton>
                                 </Tooltip>
                             }
                         />

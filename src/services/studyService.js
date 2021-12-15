@@ -55,6 +55,7 @@ export const getSingleStudyWithSeries = (studyId) => {
             series {
                 id
                 seriesName
+                idModality
                 createdAt
                 updatedAt
             }
