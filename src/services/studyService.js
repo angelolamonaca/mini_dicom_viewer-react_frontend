@@ -14,12 +14,6 @@ export const getAllStudies = () => {
             name
             createdAt
             updatedAt
-            series {
-                id
-                studyName
-                createdAt
-                updatedAt
-            }
         }
        }
       `
@@ -28,6 +22,25 @@ export const getAllStudies = () => {
 }
 
 export const getSingleStudy = (studyId) => {
+    return axios({
+        url: apiURL,
+        method: 'post',
+        data: {
+            query: `
+      query GetSingleStudy {
+        getSingleStudy(id:` + studyId + `) {
+            id
+            studyName
+            createdAt
+            updatedAt
+        }
+       }
+      `
+        }
+    });
+}
+
+export const getSingleStudyWithSeries = (studyId) => {
     return axios({
         url: apiURL,
         method: 'post',

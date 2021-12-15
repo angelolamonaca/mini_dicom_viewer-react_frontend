@@ -1,14 +1,33 @@
 import * as React from 'react';
 import {useEffect, useState} from 'react';
-import {Button, FormControl, Grid, Stack, TextField} from "@mui/material";
-import {useNavigate, useParams} from "react-router";
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import IconButton from "@mui/material/IconButton";
-import Typography from "@mui/material/Typography";
+import ImageList from '@mui/material/ImageList';
+import ImageListItem from '@mui/material/ImageListItem';
+import ImageListItemBar from '@mui/material/ImageListItemBar';
+import IconButton from '@mui/material/IconButton';
+import InfoIcon from '@mui/icons-material/Info';
 import Toolbar from "@mui/material/Toolbar";
-import {getSingleStudy} from "../services/studyService";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import Typography from "@mui/material/Typography";
+import {useNavigate, useParams} from "react-router";
+import {Grid, Tooltip} from "@mui/material";
+import Folder from '../assets/images/folder_icon.png';
+import {getSingleStudy, getSingleStudyWithSeries} from "../services/studyService";
 
-export default function SimpleContainer() {
+export default function TitlebarImageList() {
+    const [width, setWidth] = useState(window.innerWidth);
+
+    function handleWindowSizeChange() {
+        setWidth(window.innerWidth);
+    }
+
+    useEffect(() => {
+        window.addEventListener('resize', handleWindowSizeChange);
+        return () => {
+            window.removeEventListener('resize', handleWindowSizeChange);
+        }
+    }, []);
+
+    const isMobile = width <= 768;
     const {id} = useParams();
     const [studyState, setStudyState] = useState({
         study: {
@@ -21,51 +40,17 @@ export default function SimpleContainer() {
     });
     useEffect(() => {
         async function fetchData() {
-            const result = await getSingleStudy(id);
+            const result = await getSingleStudyWithSeries(id);
             setStudyState({study: result.data.data.getSingleStudy});
         }
-
         fetchData();
     }, [id]);
-
-    const [errorMessage, setErrorMessage] = useState("");
-    useEffect(() => {
-        // Set errorMessage only if text is equal or bigger than MAX_LENGTH
-        if (!studyState.study.studyName) {
-            setErrorMessage(
-                "studyName cannot be empty"
-            );
-        }
-    }, [studyState]);
-    useEffect(() => {
-        if (studyState.study.studyName) {
-            setErrorMessage("");
-        }
-    }, [studyState, errorMessage]);
-
-    const restore = () => {
-        async function fetchData() {
-            const result = await getSingleStudy(id);
-            setStudyState({study: result.data.data.getSingleStudy});
-        }
-
-        fetchData();
-    }
-
-    const onstudyNameChange = (e) => {
-        setStudyState(prevStudy => ({
-            study: {
-                ...prevStudy.study,
-                studyName: e.target.value
-            }
-        }))
-    }
-
     const navigate = useNavigate();
-    const goBack = () => navigate('/');
-
+    const goBack = () => navigate('/study/' + id);
+    const goSeriesDetail = (id) => navigate('/series/' + id);
     return (
         <Grid
+            maxWidth={'100vw'}
             container
             spacing={0}
             direction="column"
@@ -74,66 +59,47 @@ export default function SimpleContainer() {
             component="form"
             noValidate
             autoComplete="off">
+            <Toolbar>
+                <IconButton
+                    size="large"
+                    edge="start"
+                    color="inherit"
+                    aria-label="back"
+                    onClick={goBack}>
+                    <ArrowBackIcon/>
+                </IconButton>
+                <Typography variant="h6" component="div" sx={{marginLeft: '1rem'}}>
+                    Series of Study ID {studyState.study.id}
+                </Typography>
+            </Toolbar>
+            <ImageList cols={isMobile ? 1 : 3}>
+                {studyState.study.series.map((series) => (
+                    <ImageListItem key={series.id} sx={{width: isMobile ? '60vw' : '25vw', marginInline: '3vw'}}>
+                        <img
+                            src={Folder}
+                            alt={series.seriesName}
+                            style={{cursor:'pointer'}}
+                            onClick={() => goSeriesDetail(series.id)}
+                            loading="lazy"
+                        />
+                        <ImageListItemBar
+                            title={series.seriesName}
+                            subtitle={'Series ID: ' + series.id}
+                            actionIcon={
+                                <Tooltip title={`Created at ${new Date(parseInt(series.createdAt)).toLocaleString()}`}>
+                                <IconButton
+                                    sx={{color: 'rgba(255, 255, 255, 0.54)'}}
+                                    aria-label={`info about ${series.seriesName}`}
+                                >
+                                    <InfoIcon/>
+                                </IconButton>
+                                </Tooltip>
+                            }
+                        />
+                    </ImageListItem>
 
-            <div>
-                <Toolbar>
-                    <IconButton
-                        size="large"
-                        edge="start"
-                        color="inherit"
-                        aria-label="back"
-                        onClick={goBack}>
-                        <ArrowBackIcon/>
-                    </IconButton>
-                    <Typography variant="h6" component="div" sx={{marginLeft: '1rem'}}>
-                        Study Details
-                    </Typography>
-                </Toolbar>
-            </div>
-            <div>
-                <TextField
-                    sx={{margin: '25px'}}
-                    id="outlined-basic"
-                    label="ID"
-                    variant="outlined"
-                    value={id}
-                    disabled={true}/>
-            </div>
-            <div>
-                <FormControl>
-                    <TextField
-                        sx={{margin: '25px'}}
-                        id="outlined-basic"
-                        label="studyName"
-                        variant="outlined"
-                        error={studyState.study.studyName.length === 0}
-                        helperText={errorMessage}
-                        onChange={(e) => {
-                            onstudyNameChange(e)
-                        }}
-                        value={studyState.study.studyName}/>
-                </FormControl>
-            </div>
-            <div>
-                <TextField sx={{margin: '25px'}} id="outlined-basic" label="Created At" variant="outlined"
-                           value={new Date(parseInt(studyState.study.createdAt)).toLocaleString()} disabled={true}/>
-            </div>
-            <div>
-                <TextField sx={{margin: '25px'}} id="outlined-basic" label="Updated At" variant="outlined"
-                           value={new Date(parseInt(studyState.study.updatedAt)).toLocaleString()} disabled={true}/>
-            </div>
-
-            <Stack direction="row" spacing={2}>
-                <Button variant="contained" color="success">
-                    Save
-                </Button>
-                <Button
-                    variant="outlined"
-                    color="error"
-                    onClick={restore}>
-                    Restore
-                </Button>
-            </Stack>
+                ))}
+            </ImageList>
         </Grid>
     );
 }
