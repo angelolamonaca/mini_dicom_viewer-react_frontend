@@ -16,8 +16,8 @@ function App() {
             <Routes>
                 <Route path="/" element={<Layout />}>
                     <Route index element={<Home />} />
-                    <Route path="patient" element={<PatientDetails />} />
-                    <Route path="study" element={<StudyDetails />} />
+                    <Route path="patient/:id" element={<PatientDetails />} />
+                    <Route path="study/:id" element={<StudyDetails />} />
                     <Route path="series" element={<SeriesDetails />} />
                     <Route path="file" element={<FileDetails />} />
                     <Route path="modality" element={<ModalityDetails />} />

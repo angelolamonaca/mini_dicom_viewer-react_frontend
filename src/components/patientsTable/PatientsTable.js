@@ -19,9 +19,10 @@ import InfoTwoToneIcon from '@mui/icons-material/InfoTwoTone';
 import DeleteTwoToneIcon from '@mui/icons-material/DeleteTwoTone';
 import EditTwoToneIcon from '@mui/icons-material/EditTwoTone';
 import {blue, red} from "@mui/material/colors";
+import {useNavigate} from 'react-router';
 
 export default function CollapsibleTable() {
-    const [data, setData] = useState({
+    const [patientsState, setPatientsStateState] = useState({
         patients: [{
             id: '',
             name: '',
@@ -32,7 +33,7 @@ export default function CollapsibleTable() {
     useEffect(() => {
         async function fetchData() {
             const result = await getAllPatients();
-            setData({patients: result.data.data.getAllPatients});
+            setPatientsStateState({patients: result.data.data.getAllPatients});
         }
 
         fetchData();
@@ -53,7 +54,7 @@ export default function CollapsibleTable() {
                     </TableHead>
 
                     <TableBody>
-                        {data.patients.map((patient) => (
+                        {patientsState.patients.map((patient) => (
                             <Row key={patient.id} row={patient}/>
                         ))}
                     </TableBody>
@@ -67,6 +68,9 @@ export default function CollapsibleTable() {
 function Row(props) {
     const {row} = props;
     const [open, setOpen] = React.useState(false);
+    const navigate = useNavigate();
+    const goPatientDetails = () => navigate('/patient/' + row.id);
+    const goStudyDetails = () => navigate('/study/' + row.id);
     return (
         <React.Fragment>
             <TableRow sx={{'& > *': {borderBottom: 'unset'}}}>
@@ -91,7 +95,7 @@ function Row(props) {
                     <IconButton
                         aria-label="edit"
                         size="small"
-                        onClick={() => setOpen(!open)}>
+                        onClick={goPatientDetails}>
                         <EditTwoToneIcon sx={{color: "#ffc000"}}/>
                     </IconButton>
                 </TableCell>
@@ -133,7 +137,7 @@ function Row(props) {
                                                 <IconButton
                                                     aria-label="info"
                                                     size="small"
-                                                    onClick={() => setOpen(!open)}>
+                                                    onClick={goStudyDetails}>
                                                     <InfoTwoToneIcon sx={{color: blue[500]}}/>
                                                 </IconButton>
                                             </TableCell>
