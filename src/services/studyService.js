@@ -2,19 +2,19 @@ const axios = require("axios")
 
 const apiURL='http://localhost:3301/api';
 
-export const getAllPatients = () => {
+export const getAllStudies = () => {
     return axios({
         url: apiURL,
         method: 'post',
         data: {
             query: `
-      query GetAllPatients {
-        getAllPatients {
+      query GetAllStudies {
+        getAllStudies {
             id
             name
             createdAt
             updatedAt
-            studies {
+            series {
                 id
                 studyName
                 createdAt
@@ -27,21 +27,23 @@ export const getAllPatients = () => {
     });
 }
 
-export const getSinglePatient = (patientId) => {
+export const getSingleStudy = (studyId) => {
     return axios({
         url: apiURL,
         method: 'post',
         data: {
             query: `
-      query GetSinglePatient {
-        getSinglePatient(id:` + patientId + `) {
+      query GetSingleStudy {
+        getSingleStudy(id:` + studyId + `) {
             id
-            name
+            studyName
             createdAt
             updatedAt
             series {
-            id
-            seriesName
+                id
+                seriesName
+                createdAt
+                updatedAt
             }
         }
        }
