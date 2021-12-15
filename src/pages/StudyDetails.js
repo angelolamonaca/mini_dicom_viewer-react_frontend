@@ -84,11 +84,13 @@ export default function TitlebarImageList() {
                             loading="lazy"
                         />
                         <ImageListItemBar
-                            title={series.seriesName}
-                            subtitle={<ul>
-                                <li>{`Series ID: ${series.id}`},</li>
+                            title={<div><span>{series.seriesName}</span>
+                                <ul>
+                                <li>{`Series ID: ${series.id}`}</li>
                                 <li>{`Modality ID: ${series.idModality}`}</li>
-                            </ul>}
+                                </ul>
+                            </div>
+                            }
                             actionIcon={
                                 <Tooltip title={`Created at ${new Date(parseInt(series.createdAt)).toLocaleString()}`}>
                                     <IconButton
