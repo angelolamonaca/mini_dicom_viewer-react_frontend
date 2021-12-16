@@ -10,7 +10,7 @@ import {getSingleStudy} from "../services/studyService";
 import ImageSearchIcon from '@mui/icons-material/ImageSearch';
 
 export default function SimpleContainer() {
-    const {id} = useParams();
+    const {idPatient, idStudy} = useParams();
     const [studyState, setStudyState] = useState({
         study: {
             id: '',
@@ -21,12 +21,12 @@ export default function SimpleContainer() {
     });
     useEffect(() => {
         async function fetchData() {
-            const result = await getSingleStudy(id);
+            const result = await getSingleStudy(idStudy);
             setStudyState({study: result.data.data.getSingleStudy});
         }
 
         fetchData();
-    }, [id]);
+    }, [idStudy]);
 
     const [errorMessage, setErrorMessage] = useState("");
     useEffect(() => {
@@ -45,7 +45,7 @@ export default function SimpleContainer() {
 
     const restore = () => {
         async function fetchData() {
-            const result = await getSingleStudy(id);
+            const result = await getSingleStudy(idStudy);
             setStudyState({study: result.data.data.getSingleStudy});
         }
 
@@ -95,7 +95,7 @@ export default function SimpleContainer() {
                     id="outlined-basic"
                     label="ID"
                     variant="outlined"
-                    value={id}
+                    value={idStudy}
                     disabled={true}/>
             </div>
             <div>

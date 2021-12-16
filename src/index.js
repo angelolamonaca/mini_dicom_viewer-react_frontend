@@ -17,10 +17,10 @@ function App() {
             <Routes>
                 <Route path="/" element={<Layout />}>
                     <Route index element={<Home />} />
-                    <Route path="patient/:id" element={<PatientDetails />} />
-                    <Route path="study/:id" element={<StudyEdit />} />
-                    <Route path="study/:id/explorer" element={<StudyDetails />} />
-                    <Route path="series/:id" element={<SeriesDetails />} />
+                    <Route path="patient/:idPatient" element={<PatientDetails />} />
+                    <Route path="patient/:idPatient/study/:idStudy" element={<StudyEdit />} />
+                    <Route path="patient/:idPatient/study/:idStudy/explorer" element={<StudyDetails />} />
+                    <Route path="patient/:idPatient/study/:idStudy/series/:idSeries" element={<SeriesDetails />} />
                     <Route path="file" element={<FileDetails />} />
                     <Route path="modality" element={<ModalityDetails />} />
                     <Route path="*" element={<NoPage />} />

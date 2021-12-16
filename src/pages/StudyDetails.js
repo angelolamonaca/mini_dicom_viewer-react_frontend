@@ -28,7 +28,7 @@ export default function TitlebarImageList() {
     }, []);
 
     const isMobile = width <= 768;
-    const {id} = useParams();
+    const {idPatient, idStudy} = useParams();
     const [studyState, setStudyState] = useState({
         study: {
             id: '',
@@ -40,15 +40,15 @@ export default function TitlebarImageList() {
     });
     useEffect(() => {
         async function fetchData() {
-            const result = await getSingleStudyWithSeries(id);
+            const result = await getSingleStudyWithSeries(idStudy);
             setStudyState({study: result.data.data.getSingleStudy});
         }
 
         fetchData();
-    }, [id]);
+    }, [idStudy]);
     const navigate = useNavigate();
-    const goBack = () => navigate('/study/' + id);
-    const goSeriesDetail = (id) => navigate('/series/' + id);
+    const goBack = () => navigate(`/patient/${idPatient}/study/${idStudy}`);
+    const goSeriesDetail = (idSeries) => navigate(`/patient/${idPatient}/study/${idStudy}/series/${idSeries}`);
     return (
         <Grid
             maxWidth={'100vw'}

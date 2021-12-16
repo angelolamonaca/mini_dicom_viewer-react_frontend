@@ -14,14 +14,14 @@ import Typography from '@mui/material/Typography';
 import Paper from '@mui/material/Paper';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
-import {getAllPatients} from "../../services/patientService";
+import {getAllPatientsWithStudies} from "../../services/patientService";
 import InfoTwoToneIcon from '@mui/icons-material/InfoTwoTone';
 import DeleteTwoToneIcon from '@mui/icons-material/DeleteTwoTone';
 import EditTwoToneIcon from '@mui/icons-material/EditTwoTone';
 import {blue, red} from "@mui/material/colors";
 import {useNavigate} from 'react-router';
 
-export default function CollapsibleTable() {
+export default function PatientsTable() {
     const [patientsState, setPatientsStateState] = useState({
         patients: [{
             id: '',
@@ -33,7 +33,7 @@ export default function CollapsibleTable() {
     });
     useEffect(() => {
         async function fetchData() {
-            const result = await getAllPatients();
+            const result = await getAllPatientsWithStudies();
             setPatientsStateState({patients: result.data.data.getAllPatients});
         }
 
@@ -70,8 +70,8 @@ function Row(props) {
     const {row} = props;
     const [open, setOpen] = React.useState(false);
     const navigate = useNavigate();
-    const goPatientDetails = () => navigate('/patient/' + row.id);
-    const goStudyEdit = (study) => navigate('/study/' + study);
+    const goPatientDetails = () => navigate(`/patient/${row.id}`);
+    const goStudyEdit = (studyId) => navigate(`/patient/${row.id}/study/${studyId}`);
     return (
         <React.Fragment>
             <TableRow sx={{'& > *': {borderBottom: 'unset'}}}>
@@ -122,23 +122,23 @@ function Row(props) {
                                 </TableHead>
 
                                 <TableBody>
-                                    {row.studies.map((studies) => (
-                                        <TableRow key={studies.id}>
+                                    {row.studies.map((study) => (
+                                        <TableRow key={study.id}>
                                             <TableCell align="center" component="th" scope="row">
-                                                {studies.id}
+                                                {study.id}
                                             </TableCell>
                                             <TableCell align="center" component="th" scope="row">
-                                                {studies.studyName}
+                                                {study.studyName}
                                             </TableCell>
                                             <TableCell align="center" component="th" scope="row">
-                                                {new Date(parseInt(studies.createdAt)).toLocaleString()}
+                                                {new Date(parseInt(study.createdAt)).toLocaleString()}
                                             </TableCell>
 
                                             <TableCell align="center" padding={'checkbox'}>
                                                 <IconButton
                                                     aria-label="info"
                                                     size="small"
-                                                    onClick={() => goStudyEdit(studies.id)}>
+                                                    onClick={() => goStudyEdit(study.id)}>
                                                     <InfoTwoToneIcon sx={{color: blue[500]}}/>
                                                 </IconButton>
                                             </TableCell>

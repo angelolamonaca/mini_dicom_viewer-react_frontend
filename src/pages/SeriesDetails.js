@@ -15,7 +15,7 @@ import FakeDicomImage from '../assets/images/fake-dicom-image.jpg';
 
 export default function TitlebarImageList() {
     const navigate = useNavigate();
-    const {id} = useParams();
+    const {idPatient, idStudy, idSeries} = useParams();
     const [seriesState, setSeriesState] = useState({
         series: {
             id: '',
@@ -27,12 +27,12 @@ export default function TitlebarImageList() {
     });
     useEffect(() => {
         async function fetchData() {
-            const result = await getSingleSeries(id);
+            const result = await getSingleSeries(idSeries);
             setSeriesState({series: result.data.data.getSingleSeries});
         }
         fetchData();
-    }, [id]);
-    const goBack = () => navigate(`/study/${seriesState.series.idStudy}/explorer`);
+    }, [idSeries]);
+    const goBack = () => navigate(`/patient/${idPatient}/study/${idStudy}/explorer`);
     return (
         <Grid
             container

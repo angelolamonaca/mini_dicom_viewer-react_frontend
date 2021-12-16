@@ -6,12 +6,13 @@ import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
 import BarChartOutlinedIcon from '@mui/icons-material/BarChartOutlined';
 import AccountTreeOutlinedIcon from '@mui/icons-material/AccountTreeOutlined';
 import {useNavigate} from "react-router";
+import FolderOpenIcon from '@mui/icons-material/FolderOpen';
 
 export default function SimpleBottomNavigation() {
     const [value, setValue] = React.useState(0);
     const navigate = useNavigate();
     const goExplore = () => navigate('/');
-    const goStatistics = () => navigate('/statistics');
+    const goStatistics = () => navigate('/search');
     const goTreeView = () => navigate('/treeview');
     return (
         <Paper sx={{position: 'fixed', bottom: 0, left: 0, right: 0, height: '56px'}} elevation={3}>
@@ -22,12 +23,12 @@ export default function SimpleBottomNavigation() {
                     setValue(newValue);
                 }}>
                 <BottomNavigationAction
-                    label="Explore"
-                    icon={<SearchOutlinedIcon/>}
+                    label="Explorer"
+                    icon={<FolderOpenIcon/>}
                     onClick={goExplore}/>
                 <BottomNavigationAction
-                    label="Statistics"
-                    icon={<BarChartOutlinedIcon/>}
+                    label="Search"
+                    icon={<SearchOutlinedIcon/>}
                     onClick={goStatistics}/>
                 <BottomNavigationAction
                     label="TreeView"

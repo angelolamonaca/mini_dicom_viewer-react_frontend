@@ -21,14 +21,14 @@ export const getAllSeries = () => {
     });
 }
 
-export const getSingleSeries = (seriesId) => {
+export const getSingleSeries = (idSeries) => {
     return axios({
         url: apiURL,
         method: 'post',
         data: {
             query: `
       query GetSingleSeries {
-        getSingleSeries(id:` + seriesId + `) {
+        getSingleSeries(id:` + idSeries + `) {
             id
             seriesName
             idStudy

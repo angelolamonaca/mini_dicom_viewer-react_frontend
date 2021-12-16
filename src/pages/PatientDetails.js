@@ -9,7 +9,7 @@ import Typography from "@mui/material/Typography";
 import Toolbar from "@mui/material/Toolbar";
 
 export default function SimpleContainer() {
-    const {id} = useParams();
+    const {idPatient} = useParams();
     const [patientState, setPatientState] = useState({
         patient: {
             id: '',
@@ -20,12 +20,12 @@ export default function SimpleContainer() {
     });
     useEffect(() => {
         async function fetchData() {
-            const result = await getSinglePatient(id);
+            const result = await getSinglePatient(idPatient);
             setPatientState({patient: result.data.data.getSinglePatient});
         }
 
         fetchData();
-    }, [id]);
+    }, [idPatient]);
 
     const [errorMessage, setErrorMessage] = useState("");
     useEffect(() => {
@@ -44,7 +44,7 @@ export default function SimpleContainer() {
 
     const restore = () => {
         async function fetchData() {
-            const result = await getSinglePatient(id);
+            const result = await getSinglePatient(idPatient);
             setPatientState({patient: result.data.data.getSinglePatient});
         }
 
@@ -95,7 +95,7 @@ export default function SimpleContainer() {
                     id="outlined-basic"
                     label="ID"
                     variant="outlined"
-                    value={id}
+                    value={idPatient}
                     disabled={true}/>
             </div>
             <div>

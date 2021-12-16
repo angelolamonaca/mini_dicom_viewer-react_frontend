@@ -2,7 +2,7 @@ const axios = require("axios")
 
 const apiURL='http://localhost:3301/api';
 
-export const getAllPatients = () => {
+export const getAllPatientsWithStudies = () => {
     return axios({
         url: apiURL,
         method: 'post',
@@ -39,10 +39,6 @@ export const getSinglePatient = (patientId) => {
             name
             createdAt
             updatedAt
-            series {
-            id
-            seriesName
-            }
         }
        }
       `
