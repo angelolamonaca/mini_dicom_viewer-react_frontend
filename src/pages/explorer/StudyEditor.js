@@ -2,66 +2,68 @@ import * as React from 'react';
 import {useEffect, useState} from 'react';
 import {Button, FormControl, Grid, Stack, TextField} from "@mui/material";
 import {useNavigate, useParams} from "react-router";
-import {getSinglePatient} from "../services/patientService";
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import Toolbar from "@mui/material/Toolbar";
+import {getSingleStudy} from "../../services/studyService";
+import ImageSearchIcon from '@mui/icons-material/ImageSearch';
 
 export default function SimpleContainer() {
-    const {idPatient} = useParams();
-    const [patientState, setPatientState] = useState({
-        patient: {
+    const {idPatient, idStudy} = useParams();
+    const [studyState, setStudyState] = useState({
+        study: {
             id: '',
-            name: '',
+            studyName: '',
             createdAt: '',
-            updatedAt: '',
+            updatedAt: ''
         }
     });
     useEffect(() => {
         async function fetchData() {
-            const result = await getSinglePatient(idPatient);
-            setPatientState({patient: result.data.data.getSinglePatient});
+            const result = await getSingleStudy(idStudy);
+            setStudyState({study: result.data.data.getSingleStudy});
         }
 
         fetchData();
-    }, [idPatient]);
+    }, [idStudy]);
 
     const [errorMessage, setErrorMessage] = useState("");
     useEffect(() => {
         // Set errorMessage only if text is equal or bigger than MAX_LENGTH
-        if (!patientState.patient.name) {
+        if (!studyState.study.studyName) {
             setErrorMessage(
-                "Name cannot be empty"
+                "studyName cannot be empty"
             );
         }
-    }, [patientState]);
+    }, [studyState]);
     useEffect(() => {
-        if (patientState.patient.name) {
+        if (studyState.study.studyName) {
             setErrorMessage("");
         }
-    }, [patientState, errorMessage]);
+    }, [studyState, errorMessage]);
 
     const restore = () => {
         async function fetchData() {
-            const result = await getSinglePatient(idPatient);
-            setPatientState({patient: result.data.data.getSinglePatient});
+            const result = await getSingleStudy(idStudy);
+            setStudyState({study: result.data.data.getSingleStudy});
         }
 
         fetchData();
     }
 
-    const onNameChange = (e) => {
-        setPatientState(prevPatient => ({
-            patient: {
-                ...prevPatient.patient,
-                name: e.target.value
+    const onstudyNameChange = (e) => {
+        setStudyState(prevStudy => ({
+            study: {
+                ...prevStudy.study,
+                studyName: e.target.value
             }
         }))
     }
 
     const navigate = useNavigate();
-    const goBack = () => navigate('/');
+    const goBack = () => navigate(`/patient/${idPatient}/study/${idStudy}/explorer`);
+    const goSeriesDetails = () => navigate(`explorer/`);
 
     return (
         <Grid
@@ -74,28 +76,26 @@ export default function SimpleContainer() {
             noValidate
             autoComplete="off">
 
-            <div>
                 <Toolbar>
                     <IconButton
                         size="large"
                         edge="start"
                         color="inherit"
                         aria-label="back"
-                    onClick={goBack}>
+                        onClick={goBack}>
                         <ArrowBackIcon/>
                     </IconButton>
                     <Typography variant="h6" component="div" sx={{marginLeft: '1rem'}}>
-                        Patient Details
+                        Study Editor
                     </Typography>
                 </Toolbar>
-            </div>
             <div>
                 <TextField
                     sx={{margin: '25px'}}
                     id="outlined-basic"
                     label="ID"
                     variant="outlined"
-                    value={idPatient}
+                    value={idStudy}
                     disabled={true}/>
             </div>
             <div>
@@ -103,25 +103,24 @@ export default function SimpleContainer() {
                     <TextField
                         sx={{margin: '25px'}}
                         id="outlined-basic"
-                        label="Name"
+                        label="studyName"
                         variant="outlined"
-                        error={patientState.patient.name.length === 0}
+                        error={studyState.study.studyName.length === 0}
                         helperText={errorMessage}
                         onChange={(e) => {
-                            onNameChange(e)
+                            onstudyNameChange(e)
                         }}
-                        value={patientState.patient.name}/>
+                        value={studyState.study.studyName}/>
                 </FormControl>
             </div>
             <div>
                 <TextField sx={{margin: '25px'}} id="outlined-basic" label="Created At" variant="outlined"
-                           value={new Date(parseInt(patientState.patient.createdAt)).toLocaleString()} disabled={true}/>
+                           value={new Date(parseInt(studyState.study.createdAt)).toLocaleString()} disabled={true}/>
             </div>
             <div>
                 <TextField sx={{margin: '25px'}} id="outlined-basic" label="Updated At" variant="outlined"
-                           value={new Date(parseInt(patientState.patient.updatedAt)).toLocaleString()} disabled={true}/>
+                           value={new Date(parseInt(studyState.study.updatedAt)).toLocaleString()} disabled={true}/>
             </div>
-
             <Stack direction="row" spacing={2}>
                 <Button variant="contained" color="success">
                     Save

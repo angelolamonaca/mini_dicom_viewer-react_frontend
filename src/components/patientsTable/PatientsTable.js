@@ -71,7 +71,7 @@ function Row(props) {
     const [open, setOpen] = React.useState(false);
     const navigate = useNavigate();
     const goPatientDetails = () => navigate(`/patient/${row.id}`);
-    const goStudyEdit = (studyId) => navigate(`/patient/${row.id}/study/${studyId}`);
+    const goStudyExplorer = (studyId) => navigate(`/patient/${row.id}/study/${studyId}/explorer`);
     return (
         <React.Fragment>
             <TableRow sx={{'& > *': {borderBottom: 'unset'}}}>
@@ -138,7 +138,7 @@ function Row(props) {
                                                 <IconButton
                                                     aria-label="info"
                                                     size="small"
-                                                    onClick={() => goStudyEdit(study.id)}>
+                                                    onClick={() => goStudyExplorer(study.id)}>
                                                     <InfoTwoToneIcon sx={{color: blue[500]}}/>
                                                 </IconButton>
                                             </TableCell>

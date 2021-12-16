@@ -9,9 +9,12 @@ import Toolbar from "@mui/material/Toolbar";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import Typography from "@mui/material/Typography";
 import {useNavigate, useParams} from "react-router";
-import {Grid} from "@mui/material";
-import {getSingleSeries} from "../services/seriesService";
-import FakeDicomImage from '../assets/images/fake-dicom-image.jpg';
+import {Grid, Tooltip} from "@mui/material";
+import {getSingleSeries} from "../../services/seriesService";
+import ContentCopyIcon from '@mui/icons-material/ContentCopy';
+import FakeDicomImage from '../../assets/images/fake-dicom-image.jpg';
+import Box from "@mui/material/Box";
+import EditTwoToneIcon from "@mui/icons-material/EditTwoTone";
 
 export default function TitlebarImageList() {
     const navigate = useNavigate();
@@ -32,6 +35,8 @@ export default function TitlebarImageList() {
         }
         fetchData();
     }, [idSeries]);
+    const goSeriesEditor = () => navigate(`/patient/${idPatient}/study/${idStudy}/series/${idSeries}`);
+    const goFileEditor = (idFile) => navigate(`/patient/${idPatient}/study/${idStudy}/series/${idSeries}/file/${idFile}`);
     const goBack = () => navigate(`/patient/${idPatient}/study/${idStudy}/explorer`);
     return (
         <Grid
@@ -41,6 +46,7 @@ export default function TitlebarImageList() {
             alignItems="center"
             justifyContent="center"
             component="form"
+            marginBottom={'56px'}
             noValidate
             autoComplete="off">
             <Toolbar>
@@ -53,9 +59,26 @@ export default function TitlebarImageList() {
                     <ArrowBackIcon/>
                 </IconButton>
                 <Typography variant="h6" component="div" sx={{marginLeft: '1rem'}}>
-                    Files of Series ID {seriesState.series.id}
+                    <Toolbar>
+                        Series ID #{seriesState.series.id}
+                        <IconButton
+                            sx={{marginLeft: '1rem'}}
+                            aria-label="edit"
+                            size="small"
+                            onClick={goSeriesEditor}>
+                            <EditTwoToneIcon sx={{color: "#ffc000"}}/>
+                        </IconButton>
+                    </Toolbar>
                 </Typography>
             </Toolbar>
+
+
+            <Typography variant="p" component="div">
+                Series Name: {seriesState.series.seriesName}
+            </Typography>
+            <Typography variant="p" component="div">
+                Created At: {new Date(parseInt(seriesState.series.createdAt)).toLocaleString()}
+            </Typography>
             <ImageList>
                 <ImageListItem key="Subheader" cols={3}/>
                 {seriesState.series.files.map((file) => (
@@ -70,6 +93,27 @@ export default function TitlebarImageList() {
                         <ImageListItemBar
                             title={file.id}
                             subtitle={`Created at ${new Date(parseInt(file.createdAt)).toLocaleString()}`}
+                            actionIcon={
+                                <Box>
+                                    <Tooltip title={'See more details'}>
+                                        <IconButton
+                                            sx={{color: 'rgba(255, 255, 255, 0.75)'}}
+                                            aria-label={`info about file id ${file.id}`}
+                                            onClick={() => goFileEditor(file.id)}>
+                                            <InfoIcon />
+                                        </IconButton>
+                                    </Tooltip>
+                                    <Tooltip title={'Copy File Path'}>
+                                        <IconButton
+                                            sx={{color: 'rgba(255, 255, 255, 0.75)'}}
+                                            aria-label={`copy file path of file id ${file.id}`}
+                                            onClick={() => {navigator.clipboard.writeText(file.filePath)}}
+                                        >
+                                            <ContentCopyIcon />
+                                        </IconButton>
+                                    </Tooltip>
+                                </Box>
+                            }
                         />
                     </ImageListItem>
                 ))}

@@ -34,6 +34,7 @@ export const getSingleSeries = (idSeries) => {
             idStudy
             idModality
             createdAt
+            updatedAt
             files {
                 id
                 filePath

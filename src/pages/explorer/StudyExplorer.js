@@ -10,8 +10,11 @@ import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import Typography from "@mui/material/Typography";
 import {useNavigate, useParams} from "react-router";
 import {Grid, Tooltip} from "@mui/material";
-import Folder from '../assets/images/folder_icon.png';
-import {getSingleStudyWithSeries} from "../services/studyService";
+import Folder from '../../assets/images/folder_icon.png';
+import {getSingleStudyWithSeries} from "../../services/studyService";
+import EditTwoToneIcon from "@mui/icons-material/EditTwoTone";
+import {getAllModalities} from "../../services/modalityService";
+import EditIcon from '@mui/icons-material/Edit';
 
 export default function TitlebarImageList() {
     const [width, setWidth] = useState(window.innerWidth);
@@ -46,9 +49,25 @@ export default function TitlebarImageList() {
 
         fetchData();
     }, [idStudy]);
+    const [modalitiesState, setModalitiesState] = useState({
+        modalities: [{
+            id: '',
+            name: ''
+        }]
+    });
+    useEffect(() => {
+        async function fetchData() {
+            const result = await getAllModalities();
+            setModalitiesState({modalities: result.data.data.getAllModalities});
+        }
+
+        fetchData();
+    }, []);
     const navigate = useNavigate();
-    const goBack = () => navigate(`/patient/${idPatient}/study/${idStudy}`);
-    const goSeriesDetail = (idSeries) => navigate(`/patient/${idPatient}/study/${idStudy}/series/${idSeries}`);
+    const goBack = () => navigate('/');
+    const goStudyEdit = () => navigate(`/patient/${idPatient}/study/${idStudy}`);
+    const goSeriesDetails = (idSeries) => navigate(`/patient/${idPatient}/study/${idStudy}/series/${idSeries}`);
+    const goSeriesExplorer = (idSeries) => navigate(`/patient/${idPatient}/study/${idStudy}/series/${idSeries}/explorer`);
     return (
         <Grid
             maxWidth={'100vw'}
@@ -59,6 +78,7 @@ export default function TitlebarImageList() {
             justifyContent="center"
             component="form"
             noValidate
+            marginBottom={'56px'}
             autoComplete="off">
             <Toolbar>
                 <IconButton
@@ -70,9 +90,25 @@ export default function TitlebarImageList() {
                     <ArrowBackIcon/>
                 </IconButton>
                 <Typography variant="h6" component="div" sx={{marginLeft: '1rem'}}>
-                    Series of Study ID {studyState.study.id}
+                    <Toolbar>
+                        Study ID #{studyState.study.id}
+                        <IconButton
+                            sx={{marginLeft: '1rem'}}
+                            aria-label="edit"
+                            size="small"
+                            onClick={goStudyEdit}>
+                            <EditTwoToneIcon sx={{color: "#ffc000"}}/>
+                        </IconButton>
+                    </Toolbar>
                 </Typography>
             </Toolbar>
+
+            <Typography variant="p" component="div">
+                Study Name: {studyState.study.studyName}
+            </Typography>
+            <Typography variant="p" component="div">
+                Created At: {new Date(parseInt(studyState.study.createdAt)).toLocaleString()}
+            </Typography>
             <ImageList cols={isMobile ? 1 : 3}>
                 {studyState.study.series.map((series) => (
                     <ImageListItem key={series.id} sx={{width: isMobile ? '60vw' : '25vw', marginInline: '3vw'}}>
@@ -80,26 +116,18 @@ export default function TitlebarImageList() {
                             src={Folder}
                             alt={series.seriesName}
                             style={{cursor: 'pointer'}}
-                            onClick={() => goSeriesDetail(series.id)}
+                            onClick={() => goSeriesExplorer(series.id)}
                             loading="lazy"
                         />
                         <ImageListItemBar
+                            sx={{borderRadius: 8, backgroundColor: 'rgba(136,136,136,0.6)'}}
                             title={<div><span>{series.seriesName}</span>
                                 <ul>
-                                <li>{`Series ID: ${series.id}`}</li>
-                                <li>{`Modality ID: ${series.idModality}`}</li>
+                                    <li>{`Series ID: ${series.id}`}</li>
+                                    <li>{`Created at: ${new Date(parseInt(series.createdAt)).toLocaleString()}`}</li>
+                                    <li>{`Modality: ${modalitiesState.modalities[`${series.idModality}`]?.name}`}</li>
                                 </ul>
                             </div>
-                            }
-                            actionIcon={
-                                <Tooltip title={`Created at ${new Date(parseInt(series.createdAt)).toLocaleString()}`}>
-                                    <IconButton
-                                        sx={{color: 'rgba(255, 255, 255, 0.54)'}}
-                                        aria-label={`info about ${series.seriesName}`}
-                                    >
-                                        <InfoIcon/>
-                                    </IconButton>
-                                </Tooltip>
                             }
                         />
                     </ImageListItem>
