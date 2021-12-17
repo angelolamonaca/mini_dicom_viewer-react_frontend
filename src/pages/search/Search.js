@@ -8,10 +8,12 @@ import {editStudy} from "../../services/studyService";
 import {editSeries, editSeriesModality} from "../../services/seriesService";
 import {editFile} from "../../services/fileService";
 import {getAllModalities} from "../../services/modalityService";
+import DeleteIcon from '@mui/icons-material/Delete';
 import DateRangePicker from '@mui/lab/DateRangePicker';
 import AdapterDateFns from '@mui/lab/AdapterDateFns';
 import LocalizationProvider from '@mui/lab/LocalizationProvider';
-import {Button, FormControl, InputLabel, MenuItem, Select, TextField} from "@mui/material";
+import CancelIcon from '@mui/icons-material/Cancel';
+import {Button, FormControl, InputLabel, MenuItem, Select, Stack, TextField} from "@mui/material";
 
 var array = require('lodash/array');
 const columns = [
@@ -290,14 +292,17 @@ export default function DataTable(s) {
                         )}
                     />
                 </LocalizationProvider>
+                <Stack direction="row" spacing={2}>
                 <Button
                     sx={{mx: 2}}
                     size={"medium"}
                     variant="outlined"
                     color={"error"}
-                    onClick={resetDatePicker}>
-                    RESET DATE PICKER
+                    onClick={resetDatePicker}
+                    startIcon={<CancelIcon />}>
+                    RESET DATE FILTER
                 </Button>
+                </Stack>
             </Toolbar>
             <DataGrid
                 autoPageSize
