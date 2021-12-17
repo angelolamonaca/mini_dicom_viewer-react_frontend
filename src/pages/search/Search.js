@@ -22,25 +22,25 @@ export default function GroupOrientation() {
             autoComplete="off">
             <Button
                 variant="contained"
-                sx={{marginBottom: '5vh', width: '20vw', fontSize: '3rem'}}
+                sx={{marginBottom: '5vh', fontSize: '3rem'}}
                 onClick={goSearchPatients}>
                 patients
             </Button>
             <Button
                 variant="contained"
-                sx={{marginBottom: '5vh', width: '20vw', fontSize: '3rem'}}
+                sx={{marginBottom: '5vh', fontSize: '3rem'}}
                 onClick={goSearchStudies}>
                 studies
             </Button>
             <Button
                 variant="contained"
-                sx={{marginBottom: '5vh', width: '20vw', fontSize: '3rem'}}
+                sx={{marginBottom: '5vh', fontSize: '3rem'}}
                 onClick={goSearchSeries}>
                 series
             </Button>
             <Button
                 variant="contained"
-                sx={{marginBottom: '5vh', width: '20vw', fontSize: '3rem'}}
+                sx={{marginBottom: '5vh', fontSize: '3rem'}}
                 onClick={goSearchFiles}>
                 files
             </Button>

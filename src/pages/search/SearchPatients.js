@@ -53,6 +53,7 @@ export default function DataTable() {
     return (
         <Box style={{height: 'calc(100vh - 56px - 56px)', marginBottom: '56px', width: '100%'}}>
             <DataGrid
+                rowHeight={38}
                 rows={patientsState.patients}
                 columns={columns}
                 pageSize={9}

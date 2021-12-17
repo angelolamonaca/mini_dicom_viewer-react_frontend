@@ -4,8 +4,8 @@ import {DataGrid} from '@mui/x-data-grid';
 import {getAllSeries} from "../../services/seriesService";
 
 const columns = [
-    {field: 'id', headerName: 'ID Study', width: 100, editable: false},
-    {field: 'seriesName', headerName: 'Name Patient', width: 180, editable: true},
+    {field: 'id', headerName: 'ID Series', width: 100, editable: false},
+    {field: 'seriesName', headerName: 'Name Series', width: 180, editable: true},
     {field: 'createdAt', headerName: 'Created at', width: 160, editable: true},
     {field: 'updatedAt', headerName: 'Updated at', width: 160, editable: true},
 ];

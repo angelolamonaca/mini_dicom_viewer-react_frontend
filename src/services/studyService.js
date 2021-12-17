@@ -12,6 +12,7 @@ export const getAllStudies = () => {
         getAllStudies {
             id
             studyName
+            idPatient
             createdAt
             updatedAt
         }

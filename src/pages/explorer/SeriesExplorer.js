@@ -19,6 +19,20 @@ import Box from "@mui/material/Box";
 import EditTwoToneIcon from "@mui/icons-material/EditTwoTone";
 
 export default function TitlebarImageList() {
+    const [width, setWidth] = useState(window.innerWidth);
+
+    function handleWindowSizeChange() {
+        setWidth(window.innerWidth);
+    }
+
+    useEffect(() => {
+        window.addEventListener('resize', handleWindowSizeChange);
+        return () => {
+            window.removeEventListener('resize', handleWindowSizeChange);
+        }
+    }, []);
+
+    const isMobile = width <= 768;
     const navigate = useNavigate();
     const {idPatient, idStudy, idSeries} = useParams();
     const [seriesState, setSeriesState] = useState({
@@ -83,10 +97,9 @@ export default function TitlebarImageList() {
             <Typography variant="p" component="div">
                 Created At: {new Date(parseInt(seriesState.series.createdAt)).toLocaleString()}
             </Typography>
-            <ImageList>
-                <ImageListItem key="Subheader" cols={3}/>
-                {seriesState.series.files.map((file) => (
-                    <ImageListItem key={file.id} sx={{width: '25vw', margin: '30px'}}>
+            <ImageList cols={isMobile ? 1 : 3}>
+                {seriesState.series.files?.map((file) => (
+                    <ImageListItem key={file.id} sx={{width: isMobile ? '60vw' : '25vw', marginInline: '3vw', marginBottom: '3vw'}}>
                         <img
                             src={fakeImages[getRandomInt(3)]}
                             alt={file.id}
