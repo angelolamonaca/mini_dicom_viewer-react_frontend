@@ -27,29 +27,45 @@ const columns = [
 ];
 
 export default function DataTable() {
-    const editItem = async (params, event, details) => {
-        console.log("Line 26 in Search.js - Params", params)
-        console.log("Line 27 in Search.js - Event", event)
-        console.log("Line 28 in Search.js - Details", details)
+    const editItem = (params, event, details) => {
         const editedField = params.field.split(/(?=[A-Z])/)[0]
         const ids = params.id.split('-');
-        console.log("Line 33 in Search.js", ids)
         switch (editedField) {
             case 'patient':
-                await editPatient(ids[0], params.value)
-                fetchData()
+                editPatient(ids[0], params.value)
+                    .then(() => {
+                        fetchData()
+                    })
+                    .catch(() => {
+                        fetchData()
+                    })
                 break;
             case 'study':
-                await editStudy(ids[1], params.value)
-                fetchData()
+                editStudy(ids[1], params.value)
+                    .then(() => {
+                        fetchData()
+                    })
+                    .catch(() => {
+                        fetchData()
+                    })
                 break;
             case 'series':
-                await editSeries(ids[2], params.value)
-                fetchData()
+                editSeries(ids[2], params.value)
+                    .then(() => {
+                        fetchData()
+                    })
+                    .catch(() => {
+                        fetchData()
+                    })
                 break;
             case 'file':
-                await editFile(ids[3], params.value)
-                fetchData()
+                editFile(ids[3], params.value)
+                    .then(() => {
+                        fetchData()
+                    })
+                    .catch(() => {
+                        fetchData()
+                    })
                 break;
             default:
                 console.log(`Sorry, we cannot get the change.`);

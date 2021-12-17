@@ -6,7 +6,8 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import Toolbar from "@mui/material/Toolbar";
-import {getSingleStudy} from "../../services/studyService";
+import {editStudy, getSingleStudy} from "../../services/studyService";
+import {editSeries} from "../../services/seriesService";
 
 export default function SimpleContainer() {
     const {idPatient, idStudy} = useParams();
@@ -42,12 +43,18 @@ export default function SimpleContainer() {
         }
     }, [studyState, errorMessage]);
 
-    const restore = () => {
-        async function fetchData() {
-            const result = await getSingleStudy(idStudy);
-            setStudyState({study: result.data.data.getSingleStudy});
-        }
+    async function fetchData() {
+        const result = await getSingleStudy(idStudy);
+        setStudyState({study: result.data.data.getSingleStudy});
+    }
 
+    const restore = () => {
+        fetchData();
+    }
+
+
+    const save = async () => {
+        await editStudy(idStudy, studyState.study.studyName)
         fetchData();
     }
 
@@ -120,7 +127,10 @@ export default function SimpleContainer() {
                            value={new Date(parseInt(studyState.study.updatedAt)).toLocaleString()} disabled={true}/>
             </div>
             <Stack direction="row" spacing={2}>
-                <Button variant="contained" color="success">
+                <Button
+                    variant="contained"
+                    color="success"
+                    onClick={save}>
                     Save
                 </Button>
                 <Button

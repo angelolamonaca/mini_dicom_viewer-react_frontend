@@ -50,7 +50,6 @@ export default function SimpleContainer() {
         fetchData();
     }
     const save = () => {
-        console.log("Line 53 in PatientEditor.js", idPatient, patientState.patient.name)
         editPatient(idPatient, patientState.patient.name)
     }
 
