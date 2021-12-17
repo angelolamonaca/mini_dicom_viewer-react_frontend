@@ -20,8 +20,10 @@ import DeleteTwoToneIcon from '@mui/icons-material/DeleteTwoTone';
 import EditTwoToneIcon from '@mui/icons-material/EditTwoTone';
 import {blue, red} from "@mui/material/colors";
 import {useNavigate} from 'react-router';
+import {deleteStudy} from "../../services/studyService";
 
 export default function PatientsTable() {
+
     const [patientsState, setPatientsStateState] = useState({
         patients: [{
             id: '',
@@ -31,12 +33,11 @@ export default function PatientsTable() {
             studies: [{id: '', studyName: '', createdAt: ''}]
         }]
     });
+    async function fetchData() {
+        const result = await getAllPatientsWithStudies();
+        setPatientsStateState({patients: result.data.data.getAllPatients});
+    }
     useEffect(() => {
-        async function fetchData() {
-            const result = await getAllPatientsWithStudies();
-            setPatientsStateState({patients: result.data.data.getAllPatients});
-        }
-
         fetchData();
     }, []);
     return (
@@ -64,114 +65,122 @@ export default function PatientsTable() {
             </TableContainer>
         </Box>
     );
-}
 
-function Row(props) {
-    const {row} = props;
-    const [open, setOpen] = React.useState(false);
-    const navigate = useNavigate();
-    const goPatientDetails = () => navigate(`/patient/${row.id}`);
-    const goStudyExplorer = (studyId) => navigate(`/patient/${row.id}/study/${studyId}/explorer`);
-    return (
-        <React.Fragment>
-            <TableRow sx={{'& > *': {borderBottom: 'unset'}}}>
-                <TableCell>
-                    <IconButton
-                        aria-label="expand row"
-                        size="small"
-                        onClick={() => setOpen(!open)}>
-                        {open ? <KeyboardArrowUpIcon/> : <KeyboardArrowDownIcon/>}
-                    </IconButton>
-                </TableCell>
-                <TableCell align="center" component="th" scope="row">
-                    {row.id}
-                </TableCell>
-                <TableCell align="center" component="th" scope="row">
-                    {row.name}
-                </TableCell>
-                <TableCell align="center">
-                    {new Date(parseInt(row.createdAt)).toLocaleString()}
-                </TableCell>
-                <TableCell align="center" padding={'normal'}>
-                    <IconButton
-                        aria-label="edit"
-                        size="small"
-                        onClick={goPatientDetails}>
-                        <EditTwoToneIcon sx={{color: "#ffc000"}}/>
-                    </IconButton>
-                </TableCell>
-            </TableRow>
+    function Row(props) {
 
-            <TableRow>
-                <TableCell style={{paddingBottom: 0, paddingTop: 0, backgroundColor: "#daf2ff"}} colSpan={6}>
-                    <Collapse in={open} timeout="auto" unmountOnExit>
-                        <Box sx={{margin: 1}}>
-                            <Typography variant="h6" gutterBottom component="div" align="center">
-                                Studies
-                            </Typography>
-                            <Table size="small" aria-label="purchases">
-
-                                <TableHead>
-                                    <TableRow>
-                                        <TableCell align="center">Study ID</TableCell>
-                                        <TableCell align="center">Study Name</TableCell>
-                                        <TableCell align="center">Created At</TableCell>
-                                        <TableCell align="center"/>
-                                        <TableCell align="center"/>
-                                    </TableRow>
-                                </TableHead>
-
-                                <TableBody>
-                                    {row.studies.map((study) => (
-                                        <TableRow key={study.id}>
-                                            <TableCell align="center" component="th" scope="row">
-                                                {study.id}
-                                            </TableCell>
-                                            <TableCell align="center" component="th" scope="row">
-                                                {study.studyName}
-                                            </TableCell>
-                                            <TableCell align="center" component="th" scope="row">
-                                                {new Date(parseInt(study.createdAt)).toLocaleString()}
-                                            </TableCell>
-
-                                            <TableCell align="center" padding={'checkbox'}>
-                                                <IconButton
-                                                    aria-label="info"
-                                                    size="small"
-                                                    onClick={() => goStudyExplorer(study.id)}>
-                                                    <InfoTwoToneIcon sx={{color: blue[500]}}/>
-                                                </IconButton>
-                                            </TableCell>
-                                            <TableCell align="center" padding={'normal'}>
-                                                <IconButton
-                                                    aria-label="edit"
-                                                    size="small"
-                                                    onClick={() => setOpen(!open)}>
-                                                    <DeleteTwoToneIcon sx={{color: red[500]}}/>
-                                                </IconButton>
-                                            </TableCell>
-                                        </TableRow>
-                                    ))}
-                                </TableBody>
-
-                            </Table>
-                        </Box>
-                    </Collapse>
-                </TableCell>
-            </TableRow>
-        </React.Fragment>
-    );
-}
-
-Row.propTypes = {
-    row: PropTypes.shape({
-        name: PropTypes.string.isRequired,
-        createdAt: PropTypes.string.isRequired,
-        studies: PropTypes.arrayOf(
-            PropTypes.shape({
-                studyName: PropTypes.string.isRequired,
+        Row.propTypes = {
+            row: PropTypes.shape({
+                name: PropTypes.string.isRequired,
                 createdAt: PropTypes.string.isRequired,
-            }),
-        )
-    }).isRequired,
-};
+                studies: PropTypes.arrayOf(
+                    PropTypes.shape({
+                        studyName: PropTypes.string.isRequired,
+                        createdAt: PropTypes.string.isRequired,
+                    }),
+                )
+            }).isRequired,
+        };
+
+        const deleteCurrentStudy = (studyId) => {
+            deleteStudy(studyId)
+            fetchData()
+        }
+        const {row} = props;
+        const [open, setOpen] = React.useState(false);
+        const navigate = useNavigate();
+        const goPatientDetails = () => navigate(`/patient/${row.id}`);
+        const goStudyExplorer = (studyId) => navigate(`/patient/${row.id}/study/${studyId}/explorer`);
+        return (
+            <React.Fragment>
+                <TableRow sx={{'& > *': {borderBottom: 'unset'}}}>
+                    <TableCell>
+                        <IconButton
+                            aria-label="expand row"
+                            size="small"
+                            onClick={() => setOpen(!open)}>
+                            {open ? <KeyboardArrowUpIcon/> : <KeyboardArrowDownIcon/>}
+                        </IconButton>
+                    </TableCell>
+                    <TableCell align="center" component="th" scope="row">
+                        {row.id}
+                    </TableCell>
+                    <TableCell align="center" component="th" scope="row">
+                        {row.name}
+                    </TableCell>
+                    <TableCell align="center">
+                        {new Date(parseInt(row.createdAt)).toLocaleString()}
+                    </TableCell>
+                    <TableCell align="center" padding={'normal'}>
+                        <IconButton
+                            aria-label="edit"
+                            size="small"
+                            onClick={goPatientDetails}>
+                            <EditTwoToneIcon sx={{color: "#ffc000"}}/>
+                        </IconButton>
+                    </TableCell>
+                </TableRow>
+
+                <TableRow>
+                    <TableCell style={{paddingBottom: 0, paddingTop: 0, backgroundColor: "#daf2ff"}} colSpan={6}>
+                        <Collapse in={open} timeout="auto" unmountOnExit>
+                            <Box sx={{margin: 1}}>
+                                <Typography variant="h6" gutterBottom component="div" align="center">
+                                    Studies
+                                </Typography>
+                                <Table size="small" aria-label="purchases">
+
+                                    <TableHead>
+                                        <TableRow>
+                                            <TableCell align="center">Study ID</TableCell>
+                                            <TableCell align="center">Study Name</TableCell>
+                                            <TableCell align="center">Created At</TableCell>
+                                            <TableCell align="center"/>
+                                            <TableCell align="center"/>
+                                        </TableRow>
+                                    </TableHead>
+
+                                    <TableBody>
+                                        {row.studies.map((study) => (
+                                            <TableRow key={study.id}>
+                                                <TableCell align="center" component="th" scope="row">
+                                                    {study.id}
+                                                </TableCell>
+                                                <TableCell align="center" component="th" scope="row">
+                                                    {study.studyName}
+                                                </TableCell>
+                                                <TableCell align="center" component="th" scope="row">
+                                                    {new Date(parseInt(study.createdAt)).toLocaleString()}
+                                                </TableCell>
+
+                                                <TableCell align="center" padding={'checkbox'}>
+                                                    <IconButton
+                                                        aria-label="info"
+                                                        size="small"
+                                                        onClick={() => goStudyExplorer(study.id)}>
+                                                        <InfoTwoToneIcon sx={{color: blue[500]}}/>
+                                                    </IconButton>
+                                                </TableCell>
+                                                <TableCell align="center" padding={'normal'}>
+                                                    <IconButton
+                                                        aria-label="edit"
+                                                        size="small"
+                                                        onClick={() => deleteCurrentStudy(study.id)}>
+                                                        <DeleteTwoToneIcon sx={{color: red[500]}}/>
+                                                    </IconButton>
+                                                </TableCell>
+                                            </TableRow>
+                                        ))}
+                                    </TableBody>
+
+                                </Table>
+                            </Box>
+                        </Collapse>
+                    </TableCell>
+                </TableRow>
+            </React.Fragment>
+        );
+    }
+
+
+}
+
