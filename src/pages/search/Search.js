@@ -6,8 +6,9 @@ import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import {editStudy} from "../../services/studyService";
-import {editSeries} from "../../services/seriesService";
+import {editSeries, editSeriesModality} from "../../services/seriesService";
 import {editFile} from "../../services/fileService";
+import {getAllModalities} from "../../services/modalityService";
 
 var array = require('lodash/array');
 const columns = [
@@ -20,6 +21,8 @@ const columns = [
     {field: 'seriesId', headerName: 'Series ID', width: 100, editable: false},
     {field: 'seriesName', headerName: 'Series Name', width: 180, editable: true},
     {field: 'seriesCreatedAt', headerName: 'SeriesCreated at', width: 160, editable: false},
+    {field: 'modalityId', headerName: 'Modality ID', width: 100, editable: false},
+    {field: 'modalityName', headerName: 'Modality Name', width: 180, editable: true},
     {field: 'fileId', headerName: 'File ID', width: 100, editable: false},
     {field: 'filePath', headerName: 'File Name', width: 180, editable: true},
     {field: 'fileCreatedAt', headerName: 'File Created at', width: 160, editable: false},
@@ -27,7 +30,12 @@ const columns = [
 ];
 
 export default function DataTable() {
-    const editItem = (params, event, details) => {
+    let modalities;
+    async function fetchModalities() {
+        const modalitiesResult = await getAllModalities();
+        modalities = modalitiesResult.data.data.getAllModalities;
+    }
+    const editItem = async (params) => {
         const editedField = params.field.split(/(?=[A-Z])/)[0]
         const ids = params.id.split('-');
         switch (editedField) {
@@ -58,6 +66,22 @@ export default function DataTable() {
                         fetchData()
                     })
                 break;
+            case 'modality':
+                await fetchModalities()
+                console.log("Line 65 in Search.js", 'change modality name')
+                console.log("Line 67 in Search.js", modalities)
+                const newModality = modalities.find(modality => {
+                    return modality.name === params.value
+                })
+                console.log("Line 76 in Search.js", newModality)
+                editSeriesModality(ids[2], newModality?.id)
+                    .then(() => {
+                        fetchData()
+                    })
+                    .catch(() => {
+                        fetchData()
+                    })
+                break;
             case 'file':
                 editFile(ids[3], params.value)
                     .then(() => {
@@ -71,7 +95,6 @@ export default function DataTable() {
                 console.log(`Sorry, we cannot get the change.`);
         }
     }
-    const [editState, setEditState] = useState('')
     const [dataState, setDataState] = useState({
         data: [{
             "id": '',
@@ -84,14 +107,18 @@ export default function DataTable() {
             "seriesId": '',
             "seriesName": "",
             "seriesCreatedAt": "",
+            "modalityId": '',
+            "modalityName": "",
             "fileId": '',
             "filePath": "",
             "fileCreatedAt": "",
         }]
     });
     async function fetchData() {
-        const result = await getAllPatientsWithAll();
-        const patients = result.data.data.getAllPatients;
+        await fetchModalities()
+        console.log("Line 119 in Search.js", modalities)
+        const patientsResult = await getAllPatientsWithAll();
+        const patients = patientsResult.data.data.getAllPatients;
         let data = [];
         patients.forEach(patient => {
             data.push({
@@ -130,6 +157,12 @@ export default function DataTable() {
                         studyUpdatedAt: new Date(parseInt(study?.updatedAt)).toLocaleString(),
                         seriesId: series?.id,
                         seriesName: series?.seriesName,
+                        modalityId: modalities.find(modality => {
+                            return modality.id === series.idModality
+                        }).id,
+                        modalityName: modalities.find(modality => {
+                            return modality.id === series.idModality
+                        }).name,
                         seriesCreatedAt: new Date(parseInt(series?.createdAt)).toLocaleString(),
                         seriesUpdatedAt: new Date(parseInt(series?.updatedAt)).toLocaleString(),
                     })
@@ -146,6 +179,8 @@ export default function DataTable() {
                             studyName: study?.studyName,
                             studyCreatedAt: new Date(parseInt(study?.createdAt)).toLocaleString(),
                             studyUpdatedAt: new Date(parseInt(study?.updatedAt)).toLocaleString(),
+                            modalityId: modalities[`${series.idModality}`]?.id,
+                            modalityName: modalities[`${series.idModality}`]?.name,
                             seriesId: series?.id,
                             seriesName: series?.seriesName,
                             seriesCreatedAt: new Date(parseInt(series?.createdAt)).toLocaleString(),
@@ -159,12 +194,9 @@ export default function DataTable() {
                 })
             })
         })
-
         setDataState({data: data});
     }
     useEffect(() => {
-
-
         fetchData();
     }, []);
     return (

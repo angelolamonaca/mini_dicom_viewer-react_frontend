@@ -60,3 +60,18 @@ mutation EditSeries {
         }
     });
 }
+
+export const editSeriesModality = (seriesId, modalityId) => {
+    console.log("Line 65 in seriesService.js", modalityId)
+    return axios({
+        url: apiURL,
+        method: 'post',
+        data: {
+            query: `
+mutation EditSeriesModality {
+  editSeriesModality(id: ${seriesId}, idModality: ${modalityId})
+}
+      `
+        }
+    });
+}

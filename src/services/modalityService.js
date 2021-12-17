@@ -1,6 +1,6 @@
 const axios = require("axios")
 
-const apiURL = 'http://localhost:3301/api';
+const apiURL = 'http://localhost:3302/api';
 
 export const getAllModalities = () => {
     return axios({
