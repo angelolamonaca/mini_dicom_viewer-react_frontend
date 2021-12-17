@@ -7,6 +7,9 @@ import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import Toolbar from "@mui/material/Toolbar";
 import {deleteStudy, editStudy, getSingleStudy} from "../../services/studyService";
+import SaveIcon from '@mui/icons-material/Save';
+import CancelIcon from '@mui/icons-material/Cancel';
+import DeleteIcon from '@mui/icons-material/Delete';
 import {editSeries} from "../../services/seriesService";
 
 export default function SimpleContainer() {
@@ -136,13 +139,15 @@ export default function SimpleContainer() {
                     variant="contained"
                     color="success"
                     disabled={studyState.study.studyName.length === 0}
-                    onClick={save}>
+                    onClick={save}
+                    startIcon={<SaveIcon />}>
                     Save
                 </Button>
                 <Button
                     variant="contained"
-                    sx={{backgroundColor: '#ffbe00', borderColor: '#ffc000'}}
-                    onClick={restore}>
+                    color={"warning"}
+                    onClick={restore}
+                    startIcon={<CancelIcon />}>
                     Discard changes
                 </Button>
             </Stack>
@@ -150,7 +155,8 @@ export default function SimpleContainer() {
                 sx={{marginTop: '1rem'}}
                 variant="outlined"
                 color={"error"}
-                onClick={deleteCurrentStudy}>
+                onClick={deleteCurrentStudy}
+                startIcon={<DeleteIcon />}>
                 DELETE STUDY
             </Button>
         </Grid>

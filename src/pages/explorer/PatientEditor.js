@@ -6,6 +6,9 @@ import {deletePatient, editPatient, getSinglePatient} from "../../services/patie
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
+import SaveIcon from '@mui/icons-material/Save';
+import CancelIcon from '@mui/icons-material/Cancel';
+import DeleteIcon from '@mui/icons-material/Delete';
 import Toolbar from "@mui/material/Toolbar";
 
 export default function SimpleContainer() {
@@ -49,12 +52,12 @@ export default function SimpleContainer() {
     const restore = () => {
         fetchData();
     }
-    const save = () => {
-        editPatient(idPatient, patientState.patient.name)
+    const save = async () => {
+        await editPatient(idPatient, patientState.patient.name)
         fetchData();
     }
-    const deleteCurrentPatient = () => {
-        deletePatient(idPatient, patientState.patient.name)
+    const deleteCurrentPatient = async () => {
+        await deletePatient(idPatient, patientState.patient.name)
         navigate(`/`)
     }
 
@@ -143,13 +146,15 @@ export default function SimpleContainer() {
                     variant="contained"
                     color="success"
                     disabled={patientState.patient.name.length === 0}
-                    onClick={save}>
+                    onClick={save}
+                    startIcon={<SaveIcon />}>
                     Save
                 </Button>
                 <Button
                     variant="contained"
-                    sx={{backgroundColor: '#ffbe00', borderColor: '#ffc000'}}
-                    onClick={restore}>
+                    color={"warning"}
+                    onClick={restore}
+                    startIcon={<CancelIcon />}>
                     Discard changes
                 </Button>
             </Stack>
@@ -157,7 +162,8 @@ export default function SimpleContainer() {
                 sx={{marginTop: '1rem'}}
                 variant="outlined"
                 color={"error"}
-                onClick={deleteCurrentPatient}>
+                onClick={deleteCurrentPatient}
+                startIcon={<DeleteIcon />}>
                 DELETE PATIENT
             </Button>
         </Grid>

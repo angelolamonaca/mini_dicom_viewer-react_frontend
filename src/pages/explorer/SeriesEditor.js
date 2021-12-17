@@ -6,6 +6,9 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import Toolbar from "@mui/material/Toolbar";
+import SaveIcon from '@mui/icons-material/Save';
+import CancelIcon from '@mui/icons-material/Cancel';
+import DeleteIcon from '@mui/icons-material/Delete';
 import {deleteSeries, editSeries, editSeriesModality, getSingleSeries} from "../../services/seriesService";
 import {editPatient} from "../../services/patientService";
 import {getAllModalities} from "../../services/modalityService";
@@ -185,13 +188,15 @@ export default function SimpleContainer() {
                     variant="contained"
                     color="success"
                     onClick={save}
-                    disabled={!seriesState.series.idModality || seriesState.series.seriesName.length === 0}>
+                    disabled={!seriesState.series.idModality || seriesState.series.seriesName.length === 0}
+                    startIcon={<SaveIcon />}>
                     Save
                 </Button>
                 <Button
                     variant="contained"
-                    sx={{backgroundColor: '#ffbe00', borderColor: '#ffc000'}}
-                    onClick={restore}>
+                    color={"warning"}
+                    onClick={restore}
+                    startIcon={<CancelIcon />}>
                     Discard changes
                 </Button>
             </Stack>
@@ -199,7 +204,8 @@ export default function SimpleContainer() {
                 sx={{marginTop: '1rem'}}
                 variant="outlined"
                 color={"error"}
-                onClick={deleteCurrentSeries}>
+                onClick={deleteCurrentSeries}
+                startIcon={<DeleteIcon />}>
                 DELETE SERIES
             </Button>
         </Grid>
