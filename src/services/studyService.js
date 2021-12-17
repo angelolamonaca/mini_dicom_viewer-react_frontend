@@ -1,6 +1,6 @@
 const axios = require("axios")
 
-const apiURL = 'http://localhost:3301/api';
+const apiURL = 'http://localhost:3302/api';
 
 export const getAllStudies = () => {
     return axios({
@@ -62,6 +62,20 @@ export const getSingleStudyWithSeries = (studyId) => {
             }
         }
        }
+      `
+        }
+    });
+}
+
+export const editStudy = (studyId, studyName) => {
+    return axios({
+        url: apiURL,
+        method: 'post',
+        data: {
+            query: `
+mutation EditStudy {
+  editStudy(id: ${studyId}, studyName: "${studyName}")
+}
       `
         }
     });

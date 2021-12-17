@@ -1,6 +1,6 @@
 const axios = require("axios")
 
-const apiURL = 'http://localhost:3301/api';
+const apiURL = 'http://localhost:3302/api';
 
 export const getAllPatients = () => {
     return axios({
@@ -90,13 +90,27 @@ export const getSinglePatient = (patientId) => {
         data: {
             query: `
       query GetSinglePatient {
-        getSinglePatient(id:` + patientId + `) {
+        getSinglePatient(id:${patientId}) {
             id
             name
             createdAt
             updatedAt
         }
        }
+      `
+        }
+    });
+}
+
+export const editPatient = (patientId, patientName) => {
+    return axios({
+        url: apiURL,
+        method: 'post',
+        data: {
+            query: `
+      mutation EditPatient {
+  editPatient(id: ${patientId}, name: "${patientName}")
+}
       `
         }
     });
