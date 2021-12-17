@@ -7,14 +7,15 @@ import AccountTreeOutlinedIcon from '@mui/icons-material/AccountTreeOutlined';
 import {useNavigate} from "react-router";
 import FolderOpenIcon from '@mui/icons-material/FolderOpen';
 import {useState} from "react";
+import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 
 export default function SimpleBottomNavigation() {
     const pathName = window.location.pathname
-    const [value, setValue] = useState(pathName==='/search' ? 1 : pathName==='/treeview' ? 2 : 0);
+    const [value, setValue] = useState(pathName==='/search' ? 1 : pathName==='/add' ? 2 : 0);
     const navigate = useNavigate();
-    const goExplore = () => navigate('/');
-    const goStatistics = () => navigate('/search');
-    const goTreeView = () => navigate('/treeview');
+    const goExplorer = () => navigate('/');
+    const goSearch = () => navigate('/search');
+    const goAdd = () => navigate('/add');
     return (
         <Paper sx={{position: 'fixed', bottom: 0, left: 0, right: 0, height: '56px'}} elevation={3}>
             <BottomNavigation
@@ -26,15 +27,15 @@ export default function SimpleBottomNavigation() {
                 <BottomNavigationAction
                     label="Explorer"
                     icon={<FolderOpenIcon/>}
-                    onClick={goExplore}/>
+                    onClick={goExplorer}/>
                 <BottomNavigationAction
                     label="Search"
                     icon={<SearchOutlinedIcon/>}
-                    onClick={goStatistics}/>
+                    onClick={goSearch}/>
                 <BottomNavigationAction
-                    label="TreeView"
-                    icon={<AccountTreeOutlinedIcon/>}
-                    onClick={goTreeView}/>
+                    label="Add new"
+                    icon={<AddCircleOutlineIcon/>}
+                    onClick={goAdd}/>
             </BottomNavigation>
         </Paper>
     );

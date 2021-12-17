@@ -1,40 +1,45 @@
 import * as React from 'react';
-import {useEffect, useRef, useState} from 'react';
-import {DataGrid} from '@mui/x-data-grid';
+import {useEffect, useState} from 'react';
+import {DataGrid, GridToolbar} from '@mui/x-data-grid';
 import {editPatient, getAllPatientsWithAll} from "../../services/patientService";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
-import Typography from "@mui/material/Typography";
 import {editStudy} from "../../services/studyService";
 import {editSeries, editSeriesModality} from "../../services/seriesService";
 import {editFile} from "../../services/fileService";
 import {getAllModalities} from "../../services/modalityService";
+import DateRangePicker from '@mui/lab/DateRangePicker';
+import AdapterDateFns from '@mui/lab/AdapterDateFns';
+import LocalizationProvider from '@mui/lab/LocalizationProvider';
+import {Button, FormControl, InputLabel, MenuItem, Select, TextField} from "@mui/material";
 
 var array = require('lodash/array');
 const columns = [
     {field: 'patientId', headerName: 'Patient ID', width: 100, editable: false},
     {field: 'patientName', headerName: 'Patient Name', width: 180, editable: true},
-    {field: 'patientCreatedAt', headerName: 'Patient Created at', width: 160, editable: false},
+    {field: 'patientCreatedAt', headerName: 'Patient Created at', width: 500, editable: false},
     {field: 'studyId', headerName: 'Study ID', width: 100, editable: false},
     {field: 'studyName', headerName: 'Study Name', width: 180, editable: true},
-    {field: 'studyCreatedAt', headerName: 'Study Created at', width: 160, editable: false},
+    {field: 'studyCreatedAt', headerName: 'Study Created at', width: 500, editable: false},
     {field: 'seriesId', headerName: 'Series ID', width: 100, editable: false},
     {field: 'seriesName', headerName: 'Series Name', width: 180, editable: true},
-    {field: 'seriesCreatedAt', headerName: 'SeriesCreated at', width: 160, editable: false},
+    {field: 'seriesCreatedAt', headerName: 'SeriesCreated at', width: 500, editable: false},
     {field: 'modalityId', headerName: 'Modality ID', width: 100, editable: false},
     {field: 'modalityName', headerName: 'Modality Name', width: 180, editable: true},
     {field: 'fileId', headerName: 'File ID', width: 100, editable: false},
     {field: 'filePath', headerName: 'File Name', width: 180, editable: true},
-    {field: 'fileCreatedAt', headerName: 'File Created at', width: 160, editable: false},
+    {field: 'fileCreatedAt', headerName: 'File Created at', width: 500, editable: false},
 
 ];
 
-export default function DataTable() {
+export default function DataTable(s) {
     let modalities;
+
     async function fetchModalities() {
         const modalitiesResult = await getAllModalities();
         modalities = modalitiesResult.data.data.getAllModalities;
     }
+
     const editItem = async (params) => {
         const editedField = params.field.split(/(?=[A-Z])/)[0]
         const ids = params.id.split('-');
@@ -114,47 +119,47 @@ export default function DataTable() {
             "fileCreatedAt": "",
         }]
     });
+
     async function fetchData() {
         await fetchModalities()
-        console.log("Line 119 in Search.js", modalities)
         const patientsResult = await getAllPatientsWithAll();
-        const patients = patientsResult.data.data.getAllPatients;
+        const patients = await patientsResult.data.data.getAllPatients;
         let data = [];
-        patients.forEach(patient => {
+        await patients.forEach(patient => {
             data.push({
                 id: patient.id.toString(),
                 patientId: patient?.id,
                 patientName: patient?.name,
-                patientCreatedAt: new Date(parseInt(patient?.createdAt)).toLocaleString(),
-                patientUpdatedAt: new Date(parseInt(patient?.updatedAt)).toLocaleString(),
+                patientCreatedAt: new Date(parseInt(patient?.createdAt)),
+                patientUpdatedAt: new Date(parseInt(patient?.updatedAt)),
             })
             patient.studies?.forEach(study => {
                 const itemIndex = data.findIndex((item => item.id === patient.id.toString()));
                 array.pull(data, data[itemIndex]);
                 data.push({
-                    id: patient.id.toString()+'-'+study.id.toString(),
+                    id: patient.id.toString() + '-' + study.id.toString(),
                     patientId: patient?.id,
                     patientName: patient?.name,
-                    patientCreatedAt: new Date(parseInt(patient?.createdAt)).toLocaleString(),
-                    patientUpdatedAt: new Date(parseInt(patient?.updatedAt)).toLocaleString(),
+                    patientCreatedAt: new Date(parseInt(patient?.createdAt)),
+                    patientUpdatedAt: new Date(parseInt(patient?.updatedAt)),
                     studyId: study?.id,
                     studyName: study?.studyName,
-                    studyCreatedAt: new Date(parseInt(study?.createdAt)).toLocaleString(),
-                    studyUpdatedAt: new Date(parseInt(study?.updatedAt)).toLocaleString(),
+                    studyCreatedAt: new Date(parseInt(study?.createdAt)),
+                    studyUpdatedAt: new Date(parseInt(study?.updatedAt)),
                 })
                 study.series?.forEach(series => {
-                    const itemIndex = data.findIndex((item => item.id === patient.id.toString()+'-'+study.id.toString()));
+                    const itemIndex = data.findIndex((item => item.id === patient.id.toString() + '-' + study.id.toString()));
                     array.pull(data, data[itemIndex]);
                     data.push({
-                        id: patient.id.toString()+'-'+study.id.toString()+'-'+series.id.toString(),
+                        id: patient.id.toString() + '-' + study.id.toString() + '-' + series.id.toString(),
                         patientId: patient?.id,
                         patientName: patient?.name,
-                        patientCreatedAt: new Date(parseInt(patient?.createdAt)).toLocaleString(),
-                        patientUpdatedAt: new Date(parseInt(patient?.updatedAt)).toLocaleString(),
+                        patientCreatedAt: new Date(parseInt(patient?.createdAt)),
+                        patientUpdatedAt: new Date(parseInt(patient?.updatedAt)),
                         studyId: study?.id,
                         studyName: study?.studyName,
-                        studyCreatedAt: new Date(parseInt(study?.createdAt)).toLocaleString(),
-                        studyUpdatedAt: new Date(parseInt(study?.updatedAt)).toLocaleString(),
+                        studyCreatedAt: new Date(parseInt(study?.createdAt)),
+                        studyUpdatedAt: new Date(parseInt(study?.updatedAt)),
                         seriesId: series?.id,
                         seriesName: series?.seriesName,
                         modalityId: modalities.find(modality => {
@@ -163,22 +168,22 @@ export default function DataTable() {
                         modalityName: modalities.find(modality => {
                             return modality.id === series.idModality
                         }).name,
-                        seriesCreatedAt: new Date(parseInt(series?.createdAt)).toLocaleString(),
-                        seriesUpdatedAt: new Date(parseInt(series?.updatedAt)).toLocaleString(),
+                        seriesCreatedAt: new Date(parseInt(series?.createdAt)),
+                        seriesUpdatedAt: new Date(parseInt(series?.updatedAt)),
                     })
                     series.files?.forEach(file => {
-                        const itemIndex = data.findIndex((item => item.id === patient.id.toString()+'-'+study.id.toString()+'-'+series.id.toString()));
+                        const itemIndex = data.findIndex((item => item.id === patient.id.toString() + '-' + study.id.toString() + '-' + series.id.toString()));
                         array.pull(data, data[itemIndex]);
                         data.push({
-                            id: patient.id.toString()+'-'+study.id.toString()+'-'+series.id.toString()+'-'+file.id.toString(),
+                            id: patient.id.toString() + '-' + study.id.toString() + '-' + series.id.toString() + '-' + file.id.toString(),
                             patientId: patient?.id,
                             patientName: patient?.name,
-                            patientCreatedAt: new Date(parseInt(patient?.createdAt)).toLocaleString(),
-                            patientUpdatedAt: new Date(parseInt(patient?.updatedAt)).toLocaleString(),
+                            patientCreatedAt: new Date(parseInt(patient?.createdAt)),
+                            patientUpdatedAt: new Date(parseInt(patient?.updatedAt)),
                             studyId: study?.id,
                             studyName: study?.studyName,
-                            studyCreatedAt: new Date(parseInt(study?.createdAt)).toLocaleString(),
-                            studyUpdatedAt: new Date(parseInt(study?.updatedAt)).toLocaleString(),
+                            studyCreatedAt: new Date(parseInt(study?.createdAt)),
+                            studyUpdatedAt: new Date(parseInt(study?.updatedAt)),
                             modalityId: modalities.find(modality => {
                                 return modality.id === series.idModality
                             }).id,
@@ -187,26 +192,112 @@ export default function DataTable() {
                             }).name,
                             seriesId: series?.id,
                             seriesName: series?.seriesName,
-                            seriesCreatedAt: new Date(parseInt(series?.createdAt)).toLocaleString(),
-                            seriesUpdatedAt: new Date(parseInt(series?.updatedAt)).toLocaleString(),
+                            seriesCreatedAt: new Date(parseInt(series?.createdAt)),
+                            seriesUpdatedAt: new Date(parseInt(series?.updatedAt)),
                             fileId: file?.id,
                             filePath: file?.filePath,
-                            fileCreatedAt: new Date(parseInt(file?.createdAt)).toLocaleString(),
-                            fileUpdatedAt: new Date(parseInt(file?.updatedAt)).toLocaleString()
+                            fileCreatedAt: new Date(parseInt(file?.createdAt)),
+                            fileUpdatedAt: new Date(parseInt(file?.updatedAt))
                         })
                     })
                 })
             })
         })
-        setDataState({data: data});
+        await setDataState({data: data});
     }
+
     useEffect(() => {
         fetchData();
     }, []);
+
+    const [interval, setInterval] = React.useState([null, null]);
+    const [intervalType, setIntervalType] = React.useState('patient');
+
+    async function filterData(intervalType, interval) {
+        if (!interval[0] || !interval[1] || !intervalType) return;
+        const filteredData = dataState.data.filter((item) => {
+            switch (intervalType) {
+                case 'patient':
+                    return new Date(item.patientCreatedAt).getTime() > new Date(interval[0]).getTime()
+                        && new Date(item.patientCreatedAt).getTime() < new Date(interval[1]).getTime()
+                case 'study':
+                    return new Date(item.studyCreatedAt).getTime() > new Date(interval[0]).getTime()
+                        && new Date(item.studyCreatedAt).getTime() < new Date(interval[1]).getTime()
+                case 'series':
+                    return new Date(item.seriesCreatedAt).getTime() > new Date(interval[0]).getTime()
+                        && new Date(item.seriesCreatedAt).getTime() < new Date(interval[1]).getTime()
+                case 'file':
+                    return new Date(item.fileCreatedAt).getTime() > new Date(interval[0]).getTime()
+                        && new Date(item.fileCreatedAt).getTime() < new Date(interval[1]).getTime()
+                default:
+                    return true;
+            }
+        })
+        setDataState({data: filteredData});
+    }
+
+    const handleIntervalTypeChange = (event) => {
+        const intervalType = event.target.value
+        setIntervalType(event.target.value);
+        fetchData().then(() => {
+            filterData(intervalType, interval)
+        })
+    };
+
+    const handleIntervalChange = (newInterval) => {
+        setInterval(newInterval)
+        fetchData().then(() => {
+            filterData(intervalType, newInterval)
+        })
+    };
+
+    const resetDatePicker = async () => {
+        await setInterval([null, null])
+        await fetchData()
+    }
     return (
-        <Box style={{height: 'calc(100vh - 56px - 56px - 56px)', marginBottom: '56px', width: '100%'}}>
-            <Toolbar>
-                <Typography fontSize={"large"}>Custom filters</Typography>
+        <Box style={{height: 'calc(100vh - 56px - 56px - 56px - 36px)', marginBottom: '56px', width: '100%'}}>
+            <Toolbar sx={{marginTop: '10px', marginBottom: '10px'}}>
+                <FormControl sx={{width: '150px', mx: 2}}>
+                    <InputLabel id="demo-simple-select-label">Item Type</InputLabel>
+                    <Select
+                        size={"medium"}
+                        labelId="demo-simple-select-label"
+                        id="demo-simple-select"
+                        value={intervalType}
+                        label="Item Type"
+                        onChange={handleIntervalTypeChange}>
+                        <MenuItem value={'patient'}>Patient</MenuItem>
+                        <MenuItem value={'study'}>Study</MenuItem>
+                        <MenuItem value={'series'}>Series</MenuItem>
+                        <MenuItem value={'file'}>File</MenuItem>
+                    </Select>
+                </FormControl>
+                <Box sx={{mx: 2, textTransform: 'uppercase'}}> created from </Box>
+                <LocalizationProvider dateAdapter={AdapterDateFns}>
+                    <DateRangePicker
+                        startText="Start date"
+                        endText="End date"
+                        showTimeSelect
+                        value={interval}
+                        onChange={handleIntervalChange}
+                        renderInput={(startProps, endProps) => (
+                            <React.Fragment>
+                                <TextField sx={{mx: 2}} size={"medium"} {...startProps} />
+                                <Box sx={{mx: 2, textTransform: 'uppercase'}}> to </Box>
+                                <TextField sx={{mx: 2}} size={"medium"} {...endProps} />
+                            </React.Fragment>
+                        )}
+                    />
+                </LocalizationProvider>
+                <Button
+                    sx={{mx: 2}}
+                    size={"medium"}
+                    variant="outlined"
+                    color={"error"}
+                    onClick={resetDatePicker}>
+                    RESET DATE PICKER
+                </Button>
             </Toolbar>
             <DataGrid
                 autoPageSize
@@ -216,6 +307,10 @@ export default function DataTable() {
                 columns={columns}
                 checkboxSelection={true}
                 disableSelectionOnClick={true}
+                components={{
+                    Toolbar: GridToolbar,
+                }}
+
             />
         </Box>
     );
