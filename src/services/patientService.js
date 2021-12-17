@@ -1,6 +1,6 @@
 const axios = require("axios")
 
-const apiURL='http://localhost:3301/api';
+const apiURL = 'http://localhost:3301/api';
 
 export const getAllPatientsWithStudies = () => {
     return axios({
@@ -22,6 +22,43 @@ export const getAllPatientsWithStudies = () => {
             }
         }
        }
+      `
+        }
+    });
+}
+export const getAllPatientsWithAll = () => {
+    return axios({
+        url: apiURL,
+        method: 'post',
+        data: {
+            query: `
+            query GetAllPatients {
+  getAllPatients {
+    id
+    name
+    createdAt
+    updatedAt
+    studies {
+      id
+      studyName
+      updatedAt
+      createdAt
+      series {
+        id
+        seriesName
+        createdAt
+        updatedAt
+        idModality
+        files {
+          id
+          filePath
+          createdAt
+          updatedAt
+        }
+      }
+    }
+  }
+}
       `
         }
     });

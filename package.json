@@ -42,6 +42,7 @@
     ]
   },
   "devDependencies": {
+    "@mui/lab": "^5.0.0-alpha.60",
     "axios": "^0.24.0",
     "clsx": "^1.1.1",
     "prop-types": "^15.7.2",

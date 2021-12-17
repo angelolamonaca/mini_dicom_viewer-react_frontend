@@ -4,17 +4,15 @@ import ImageList from '@mui/material/ImageList';
 import ImageListItem from '@mui/material/ImageListItem';
 import ImageListItemBar from '@mui/material/ImageListItemBar';
 import IconButton from '@mui/material/IconButton';
-import InfoIcon from '@mui/icons-material/Info';
 import Toolbar from "@mui/material/Toolbar";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import Typography from "@mui/material/Typography";
 import {useNavigate, useParams} from "react-router";
-import {Grid, Tooltip} from "@mui/material";
+import {Grid} from "@mui/material";
 import Folder from '../../assets/images/folder_icon.png';
 import {getSingleStudyWithSeries} from "../../services/studyService";
 import EditTwoToneIcon from "@mui/icons-material/EditTwoTone";
 import {getAllModalities} from "../../services/modalityService";
-import EditIcon from '@mui/icons-material/Edit';
 
 export default function TitlebarImageList() {
     const [width, setWidth] = useState(window.innerWidth);

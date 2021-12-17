@@ -3,7 +3,6 @@ import BottomNavigation from '@mui/material/BottomNavigation';
 import BottomNavigationAction from '@mui/material/BottomNavigationAction';
 import Paper from "@mui/material/Paper";
 import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
-import BarChartOutlinedIcon from '@mui/icons-material/BarChartOutlined';
 import AccountTreeOutlinedIcon from '@mui/icons-material/AccountTreeOutlined';
 import {useNavigate} from "react-router";
 import FolderOpenIcon from '@mui/icons-material/FolderOpen';

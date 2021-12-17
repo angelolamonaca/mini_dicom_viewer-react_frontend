@@ -7,7 +7,6 @@ import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import Toolbar from "@mui/material/Toolbar";
 import {getSingleSeries} from "../../services/seriesService";
-import ImageSearchIcon from '@mui/icons-material/ImageSearch';
 
 export default function SimpleContainer() {
     const {idPatient, idStudy, idSeries} = useParams();

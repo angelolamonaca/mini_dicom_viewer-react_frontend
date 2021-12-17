@@ -21,8 +21,10 @@ function App() {
                     <Route path="patient/:idPatient/study/:idStudy" element={<StudyEditor/>}/>
                     <Route path="patient/:idPatient/study/:idStudy/explorer" element={<StudyExplorer/>}/>
                     <Route path="patient/:idPatient/study/:idStudy/series/:idSeries" element={<SeriesEditor/>}/>
-                    <Route path="patient/:idPatient/study/:idStudy/series/:idSeries/explorer" element={<SeriesExplorer/>}/>
-                    <Route path="patient/:idPatient/study/:idStudy/series/:idSeries/file/:idFile" element={<FileEditor/>}/>
+                    <Route path="patient/:idPatient/study/:idStudy/series/:idSeries/explorer"
+                           element={<SeriesExplorer/>}/>
+                    <Route path="patient/:idPatient/study/:idStudy/series/:idSeries/file/:idFile"
+                           element={<FileEditor/>}/>
                     <Route path="*" element={<NoPage/>}/>
                 </Route>
             </Routes>

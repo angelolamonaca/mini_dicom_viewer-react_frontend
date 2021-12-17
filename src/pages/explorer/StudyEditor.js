@@ -7,7 +7,6 @@ import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import Toolbar from "@mui/material/Toolbar";
 import {getSingleStudy} from "../../services/studyService";
-import ImageSearchIcon from '@mui/icons-material/ImageSearch';
 
 export default function SimpleContainer() {
     const {idPatient, idStudy} = useParams();
@@ -76,19 +75,19 @@ export default function SimpleContainer() {
             noValidate
             autoComplete="off">
 
-                <Toolbar>
-                    <IconButton
-                        size="large"
-                        edge="start"
-                        color="inherit"
-                        aria-label="back"
-                        onClick={goBack}>
-                        <ArrowBackIcon/>
-                    </IconButton>
-                    <Typography variant="h6" component="div" sx={{marginLeft: '1rem'}}>
-                        Study Editor
-                    </Typography>
-                </Toolbar>
+            <Toolbar>
+                <IconButton
+                    size="large"
+                    edge="start"
+                    color="inherit"
+                    aria-label="back"
+                    onClick={goBack}>
+                    <ArrowBackIcon/>
+                </IconButton>
+                <Typography variant="h6" component="div" sx={{marginLeft: '1rem'}}>
+                    Study Editor
+                </Typography>
+            </Toolbar>
             <div>
                 <TextField
                     sx={{margin: '25px'}}

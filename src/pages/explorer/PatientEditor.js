@@ -81,7 +81,7 @@ export default function SimpleContainer() {
                         edge="start"
                         color="inherit"
                         aria-label="back"
-                    onClick={goBack}>
+                        onClick={goBack}>
                         <ArrowBackIcon/>
                     </IconButton>
                     <Typography variant="h6" component="div" sx={{marginLeft: '1rem'}}>

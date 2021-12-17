@@ -1,6 +1,6 @@
 const axios = require("axios")
 
-const apiURL='http://localhost:3301/api';
+const apiURL = 'http://localhost:3301/api';
 
 export const getAllSeries = () => {
     return axios({

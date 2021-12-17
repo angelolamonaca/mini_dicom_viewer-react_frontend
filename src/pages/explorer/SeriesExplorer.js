@@ -35,6 +35,7 @@ export default function TitlebarImageList() {
             const result = await getSingleSeries(idSeries);
             setSeriesState({series: result.data.data.getSingleSeries});
         }
+
         fetchData();
     }, [idSeries]);
     const goSeriesEditor = () => navigate(`/patient/${idPatient}/study/${idStudy}/series/${idSeries}`);
@@ -101,16 +102,18 @@ export default function TitlebarImageList() {
                                             sx={{color: 'rgba(255, 255, 255, 0.75)'}}
                                             aria-label={`info about file id ${file.id}`}
                                             onClick={() => goFileEditor(file.id)}>
-                                            <InfoIcon />
+                                            <InfoIcon/>
                                         </IconButton>
                                     </Tooltip>
                                     <Tooltip title={'Copy File Path'}>
                                         <IconButton
                                             sx={{color: 'rgba(255, 255, 255, 0.75)'}}
                                             aria-label={`copy file path of file id ${file.id}`}
-                                            onClick={() => {navigator.clipboard.writeText(file.filePath)}}
+                                            onClick={() => {
+                                                navigator.clipboard.writeText(file.filePath)
+                                            }}
                                         >
-                                            <ContentCopyIcon />
+                                            <ContentCopyIcon/>
                                         </IconButton>
                                     </Tooltip>
                                 </Box>
