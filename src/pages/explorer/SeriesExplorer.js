@@ -13,6 +13,8 @@ import {Grid, Tooltip} from "@mui/material";
 import {getSingleSeries} from "../../services/seriesService";
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import FakeDicomImage from '../../assets/images/fake-dicom-image.jpg';
+import FakeDicomImage2 from '../../assets/images/fake-dicom-image-2.jpg';
+import FakeDicomImage3 from '../../assets/images/fake-dicom-image-3.jpg';
 import Box from "@mui/material/Box";
 import EditTwoToneIcon from "@mui/icons-material/EditTwoTone";
 
@@ -38,6 +40,7 @@ export default function TitlebarImageList() {
     const goSeriesEditor = () => navigate(`/patient/${idPatient}/study/${idStudy}/series/${idSeries}`);
     const goFileEditor = (idFile) => navigate(`/patient/${idPatient}/study/${idStudy}/series/${idSeries}/file/${idFile}`);
     const goBack = () => navigate(`/patient/${idPatient}/study/${idStudy}/explorer`);
+    const fakeImages = [FakeDicomImage, FakeDicomImage2, FakeDicomImage3];
     return (
         <Grid
             container
@@ -84,11 +87,9 @@ export default function TitlebarImageList() {
                 {seriesState.series.files.map((file) => (
                     <ImageListItem key={file.id} sx={{width: '25vw', margin: '30px'}}>
                         <img
-                            src={FakeDicomImage}
+                            src={fakeImages[getRandomInt(3)]}
                             alt={file.id}
                             loading="lazy"
-                            style={{cursor:'pointer'}}
-                            onClick={() => window.location.href = FakeDicomImage}
                         />
                         <ImageListItemBar
                             title={file.id}
@@ -120,4 +121,8 @@ export default function TitlebarImageList() {
             </ImageList>
         </Grid>
     );
+}
+
+function getRandomInt(max) {
+    return Math.floor(Math.random() * max);
 }
