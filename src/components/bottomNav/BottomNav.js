@@ -10,7 +10,7 @@ import {useState} from "react";
 
 export default function SimpleBottomNavigation() {
     const pathName = window.location.pathname
-    const [value, setValue] = useState(pathName==='/' ? 0 : 1);
+    const [value, setValue] = useState(pathName==='/search' ? 1 : pathName==='/treeview' ? 2 : 0);
     const navigate = useNavigate();
     const goExplore = () => navigate('/');
     const goStatistics = () => navigate('/search');

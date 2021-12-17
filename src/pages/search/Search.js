@@ -179,8 +179,12 @@ export default function DataTable() {
                             studyName: study?.studyName,
                             studyCreatedAt: new Date(parseInt(study?.createdAt)).toLocaleString(),
                             studyUpdatedAt: new Date(parseInt(study?.updatedAt)).toLocaleString(),
-                            modalityId: modalities[`${series.idModality}`]?.id,
-                            modalityName: modalities[`${series.idModality}`]?.name,
+                            modalityId: modalities.find(modality => {
+                                return modality.id === series.idModality
+                            }).id,
+                            modalityName: modalities.find(modality => {
+                                return modality.id === series.idModality
+                            }).name,
                             seriesId: series?.id,
                             seriesName: series?.seriesName,
                             seriesCreatedAt: new Date(parseInt(series?.createdAt)).toLocaleString(),

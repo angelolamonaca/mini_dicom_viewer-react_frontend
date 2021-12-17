@@ -72,6 +72,7 @@ export default function SimpleContainer() {
 
     return (
         <Grid
+            marginBottom={'112px'}
             container
             spacing={0}
             direction="column"
@@ -130,6 +131,7 @@ export default function SimpleContainer() {
                 <Button
                     variant="contained"
                     color="success"
+                    disabled={studyState.study.studyName.length === 0}
                     onClick={save}>
                     Save
                 </Button>

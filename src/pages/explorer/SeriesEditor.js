@@ -6,21 +6,41 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import Toolbar from "@mui/material/Toolbar";
-import {editSeries, getSingleSeries} from "../../services/seriesService";
+import {editSeries, editSeriesModality, getSingleSeries} from "../../services/seriesService";
 import {editPatient} from "../../services/patientService";
+import {getAllModalities} from "../../services/modalityService";
 
 export default function SimpleContainer() {
+    let modalities;
+    async function fetchModalities() {
+        const modalitiesResult = await getAllModalities();
+        modalities = modalitiesResult.data.data.getAllModalities;
+    }
     const {idPatient, idStudy, idSeries} = useParams();
     const [seriesState, setSeriesState] = useState({
         series: {
             id: '',
             seriesName: '',
+            idModality: '',
+            modalityName: '',
             createdAt: '',
             updatedAt: ''
         }
     });
+    const [modalitiesState, setModalitiesState] = useState({
+        modalities: [{
+            id: '',
+            name: ''
+        }]
+    });
+
+    async function fetchModalities() {
+        const result = await getAllModalities();
+        setModalitiesState({modalities: result.data.data.getAllModalities});
+    }
     useEffect(() => {
         async function fetchData() {
+            await fetchModalities()
             const result = await getSingleSeries(idSeries);
             setSeriesState({series: result.data.data.getSingleSeries});
         }
@@ -54,14 +74,28 @@ export default function SimpleContainer() {
 
     const save = async () => {
         await editSeries(idSeries, seriesState.series.seriesName)
+        await editSeriesModality(idSeries, seriesState.series.idModality)
         fetchData();
     }
 
-    const onseriesNameChange = (e) => {
+    const onSeriesNameChange = (e) => {
         setSeriesState(prevSeries => ({
             series: {
                 ...prevSeries.series,
                 seriesName: e.target.value
+            }
+        }))
+    }
+
+    const onSeriesModalityChange = (e) => {
+        const newIdModality = modalitiesState.modalities?.find(modality => {
+            return modality.name === e.target.value
+        })?.id
+        setSeriesState(prevSeries => ({
+            series: {
+                ...prevSeries.series,
+                idModality: newIdModality || ''
+
             }
         }))
     }
@@ -71,6 +105,7 @@ export default function SimpleContainer() {
 
     return (
         <Grid
+            marginBottom={'112px'}
             container
             spacing={0}
             direction="column"
@@ -112,10 +147,24 @@ export default function SimpleContainer() {
                         error={seriesState.series.seriesName.length === 0}
                         helperText={errorMessage}
                         onChange={(e) => {
-                            onseriesNameChange(e)
+                            onSeriesNameChange(e)
                         }}
                         value={seriesState.series.seriesName}/>
                 </FormControl>
+            </div>
+            <div>
+                <TextField sx={{margin: '25px'}} id="outlined-basic" label="ID Modality" variant="outlined"
+                           value={seriesState.series.idModality} disabled={true}/>
+            </div>
+            <div>
+                <TextField sx={{margin: '25px'}} id="outlined-basic" label="Modality Name" variant="outlined"
+                           onChange={(e) => {
+                               onSeriesModalityChange(e)
+                           }}
+                           error={!seriesState.series.idModality}
+                           value={modalitiesState.modalities?.find(modality => {
+                               return modality.id === seriesState.series.idModality
+                           })?.name}/>
             </div>
             <div>
                 <TextField sx={{margin: '25px'}} id="outlined-basic" label="Created At" variant="outlined"
@@ -129,7 +178,8 @@ export default function SimpleContainer() {
                 <Button
                     variant="contained"
                     color="success"
-                    onClick={save}>
+                    onClick={save}
+                    disabled={!seriesState.series.idModality || seriesState.series.seriesName.length === 0}>
                     Save
                 </Button>
                 <Button
