@@ -8,7 +8,6 @@ import {editStudy} from "../../services/studyService";
 import {editSeries, editSeriesModality} from "../../services/seriesService";
 import {editFile} from "../../services/fileService";
 import {getAllModalities} from "../../services/modalityService";
-import DeleteIcon from '@mui/icons-material/Delete';
 import DateRangePicker from '@mui/lab/DateRangePicker';
 import AdapterDateFns from '@mui/lab/AdapterDateFns';
 import LocalizationProvider from '@mui/lab/LocalizationProvider';
@@ -35,11 +34,10 @@ const columns = [
 ];
 
 export default function DataTable(s) {
-    let modalities;
 
-    async function fetchModalities() {
+    async function getModalities() {
         const modalitiesResult = await getAllModalities();
-        modalities = modalitiesResult.data.data.getAllModalities;
+        return modalitiesResult.data.data.getAllModalities;
     }
 
     const editItem = async (params) => {
@@ -49,38 +47,35 @@ export default function DataTable(s) {
             case 'patient':
                 editPatient(ids[0], params.value)
                     .then(() => {
-                        fetchData()
+                        fetchData().then(data => setDataState({data: data}));
                     })
                     .catch(() => {
-                        fetchData()
+                        fetchData().then(data => setDataState({data: data}));
                     })
                 break;
             case 'study':
                 editStudy(ids[1], params.value)
                     .then(() => {
-                        fetchData()
+                        fetchData().then(data => setDataState({data: data}));
                     })
                     .catch(() => {
-                        fetchData()
+                        fetchData().then(data => setDataState({data: data}));
                     })
                 break;
             case 'series':
                 editSeries(ids[2], params.value)
                     .then(() => {
-                        fetchData()
+                        fetchData().then(data => setDataState({data: data}));
                     })
                     .catch(() => {
-                        fetchData()
+                        fetchData().then(data => setDataState({data: data}));
                     })
                 break;
             case 'modality':
-                await fetchModalities()
-                console.log("Line 65 in Search.js", 'change modality name')
-                console.log("Line 67 in Search.js", modalities)
+                const modalities = await getModalities()
                 const newModality = modalities.find(modality => {
                     return modality.name === params.value
                 })
-                console.log("Line 76 in Search.js", newModality)
                 editSeriesModality(ids[2], newModality?.id)
                     .then(() => {
                         fetchData()
@@ -122,12 +117,12 @@ export default function DataTable(s) {
         }]
     });
 
-    async function fetchData() {
-        await fetchModalities()
+    const fetchData = async () => {
+        const modalities = await getModalities()
         const patientsResult = await getAllPatientsWithAll();
-        const patients = await patientsResult.data.data.getAllPatients;
+        const patients = patientsResult.data.data.getAllPatients;
         let data = [];
-        await patients.forEach(patient => {
+        for await (const patient of patients) {
             data.push({
                 id: patient.id.toString(),
                 patientId: patient?.id,
@@ -135,9 +130,9 @@ export default function DataTable(s) {
                 patientCreatedAt: new Date(parseInt(patient?.createdAt)),
                 patientUpdatedAt: new Date(parseInt(patient?.updatedAt)),
             })
-            patient.studies?.forEach(study => {
+            for await (const study of patient.studies) {
                 const itemIndex = data.findIndex((item => item.id === patient.id.toString()));
-                array.pull(data, data[itemIndex]);
+                await array.pull(data, data[itemIndex]);
                 data.push({
                     id: patient.id.toString() + '-' + study.id.toString(),
                     patientId: patient?.id,
@@ -149,9 +144,9 @@ export default function DataTable(s) {
                     studyCreatedAt: new Date(parseInt(study?.createdAt)),
                     studyUpdatedAt: new Date(parseInt(study?.updatedAt)),
                 })
-                study.series?.forEach(series => {
+                for await (const series of study.series) {
                     const itemIndex = data.findIndex((item => item.id === patient.id.toString() + '-' + study.id.toString()));
-                    array.pull(data, data[itemIndex]);
+                    await array.pull(data, data[itemIndex]);
                     data.push({
                         id: patient.id.toString() + '-' + study.id.toString() + '-' + series.id.toString(),
                         patientId: patient?.id,
@@ -164,18 +159,18 @@ export default function DataTable(s) {
                         studyUpdatedAt: new Date(parseInt(study?.updatedAt)),
                         seriesId: series?.id,
                         seriesName: series?.seriesName,
-                        modalityId: modalities.find(modality => {
+                        modalityId: await modalities.find(modality => {
                             return modality.id === series.idModality
                         }).id,
-                        modalityName: modalities.find(modality => {
+                        modalityName: await modalities.find(modality => {
                             return modality.id === series.idModality
                         }).name,
                         seriesCreatedAt: new Date(parseInt(series?.createdAt)),
                         seriesUpdatedAt: new Date(parseInt(series?.updatedAt)),
                     })
-                    series.files?.forEach(file => {
+                    for await (const file of series.files) {
                         const itemIndex = data.findIndex((item => item.id === patient.id.toString() + '-' + study.id.toString() + '-' + series.id.toString()));
-                        array.pull(data, data[itemIndex]);
+                        await array.pull(data, data[itemIndex]);
                         data.push({
                             id: patient.id.toString() + '-' + study.id.toString() + '-' + series.id.toString() + '-' + file.id.toString(),
                             patientId: patient?.id,
@@ -186,10 +181,10 @@ export default function DataTable(s) {
                             studyName: study?.studyName,
                             studyCreatedAt: new Date(parseInt(study?.createdAt)),
                             studyUpdatedAt: new Date(parseInt(study?.updatedAt)),
-                            modalityId: modalities.find(modality => {
+                            modalityId: await modalities.find(modality => {
                                 return modality.id === series.idModality
                             }).id,
-                            modalityName: modalities.find(modality => {
+                            modalityName: await modalities.find(modality => {
                                 return modality.id === series.idModality
                             }).name,
                             seriesId: series?.id,
@@ -201,65 +196,60 @@ export default function DataTable(s) {
                             fileCreatedAt: new Date(parseInt(file?.createdAt)),
                             fileUpdatedAt: new Date(parseInt(file?.updatedAt))
                         })
-                    })
-                })
-            })
-        })
-        await setDataState({data: data});
+                    }
+                }
+            }
+        }
         return data
     }
-
-    useEffect(() => {
-        fetchData();
-    }, []);
 
     const [interval, setInterval] = React.useState([null, null]);
     const [intervalType, setIntervalType] = React.useState('patient');
 
-    async function filterData(intervalType, interval) {
-        console.log("Line 219 in Search.js", interval[0], interval[1], intervalType)
-        if (!interval[0] || !interval[1] || !intervalType) {
-            console.log("Line 221 in Search.js", "Data fetching!")
-            await fetchData()
-            return;
-        }
-        console.log("Line 225 in Search.js", "Start filtering data!")
-        const filteredData = dataState.data.filter((item) => {
-            switch (intervalType) {
+    useEffect(() => {
+        fetchData().then(data => setDataState({data: data}));
+    }, []);
+
+    async function filterData(data, localIntervalType, localInterval) {
+        if (!localInterval[0] || !localInterval[1] || !localIntervalType) return;
+
+        return data.filter((item) => {
+            switch (localIntervalType) {
                 case 'patient':
-                    return new Date(item.patientCreatedAt).getTime() > new Date(interval[0]).getTime()
-                        && new Date(item.patientCreatedAt).getTime() < new Date(interval[1]).getTime()
+                    return new Date(item.patientCreatedAt).getTime() > new Date(localInterval[0]).getTime()
+                        && new Date(item.patientCreatedAt).getTime() < new Date(localInterval[1]).getTime()
                 case 'study':
-                    return new Date(item.studyCreatedAt).getTime() > new Date(interval[0]).getTime()
-                        && new Date(item.studyCreatedAt).getTime() < new Date(interval[1]).getTime()
+                    return new Date(item.studyCreatedAt).getTime() > new Date(localInterval[0]).getTime()
+                        && new Date(item.studyCreatedAt).getTime() < new Date(localInterval[1]).getTime()
                 case 'series':
-                    return new Date(item.seriesCreatedAt).getTime() > new Date(interval[0]).getTime()
-                        && new Date(item.seriesCreatedAt).getTime() < new Date(interval[1]).getTime()
+                    return new Date(item.seriesCreatedAt).getTime() > new Date(localInterval[0]).getTime()
+                        && new Date(item.seriesCreatedAt).getTime() < new Date(localInterval[1]).getTime()
                 case 'file':
-                    return new Date(item.fileCreatedAt).getTime() > new Date(interval[0]).getTime()
-                        && new Date(item.fileCreatedAt).getTime() < new Date(interval[1]).getTime()
+                    return new Date(item.fileCreatedAt).getTime() > new Date(localInterval[0]).getTime()
+                        && new Date(item.fileCreatedAt).getTime() < new Date(localInterval[1]).getTime()
                 default:
                     return true;
             }
-        })
-        console.log("Line 244 in Search.js","Filtering data completed!")
-        setDataState({data: filteredData});
+        });
     }
 
-    const handleIntervalTypeChange = (event) => {
-        console.log("Line 249 in Search.js", "Interval type changed: "+event.target.value)
+    const handleIntervalTypeChange = async (event) => {
         const newIntervalType = event.target.value
         setIntervalType(newIntervalType);
-        fetchData().then(() => {
-            filterData(newIntervalType, interval)
+        await fetchData().then(async (data) => {
+            filterData(data, newIntervalType, interval).then(async (filteredData) => {
+                await setDataState({data: filteredData});
+            })
         })
     };
 
-    const handleIntervalChange = (newInterval) => {
-        console.log("Line 258 in Search.js", "Interval changed: "+newInterval)
+    const handleIntervalChange = async (newInterval) => {
+        if (!newInterval[0] || !newInterval[1]) return;
         setInterval(newInterval)
-        fetchData().then(() => {
-            filterData(intervalType, newInterval)
+        await fetchData().then(async (data) => {
+            filterData(data, intervalType, newInterval).then(async (filteredData) => {
+                await setDataState({data: filteredData});
+            })
         })
     };
 
@@ -303,15 +293,15 @@ export default function DataTable(s) {
                     />
                 </LocalizationProvider>
                 <Stack direction="row" spacing={2}>
-                <Button
-                    sx={{mx: 2}}
-                    size={"medium"}
-                    variant="outlined"
-                    color={"error"}
-                    onClick={resetDatePicker}
-                    startIcon={<CancelIcon />}>
-                    RESET DATE FILTER
-                </Button>
+                    <Button
+                        sx={{mx: 2}}
+                        size={"medium"}
+                        variant="outlined"
+                        color={"error"}
+                        onClick={resetDatePicker}
+                        startIcon={<CancelIcon/>}>
+                        RESET DATE FILTER
+                    </Button>
                 </Stack>
             </Toolbar>
             <DataGrid
