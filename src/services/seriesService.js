@@ -47,6 +47,28 @@ export const getSingleSeries = (idSeries) => {
     });
 }
 
+export const createSeries = (seriesName, idPatient, idStudy, idModality) => {
+    return axios({
+        url: apiURL,
+        method: 'post',
+        data: {
+            query: `
+mutation CreateSeries {
+  createSeries(
+  seriesName: "${seriesName}"
+  idPatient: ${idPatient}
+  idStudy: ${idStudy}
+  idModality: ${idModality}
+  ) {
+  id
+  seriesName
+  }
+}
+      `
+        }
+    });
+}
+
 export const editSeries = (seriesId, seriesName) => {
     return axios({
         url: apiURL,

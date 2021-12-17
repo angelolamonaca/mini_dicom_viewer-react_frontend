@@ -10,7 +10,9 @@ import FormGroup from '@mui/material/FormGroup';
 import SaveIcon from "@mui/icons-material/Save";
 import {createPatient, getAllPatientsWithStudies} from "../../services/patientService";
 import {useNavigate} from "react-router";
-import {createStudy} from "../../services/studyService";
+import {createStudy, getAllStudies} from "../../services/studyService";
+import {getAllModalities} from "../../services/modalityService";
+import {createSeries} from "../../services/seriesService";
 
 export default function LabTabs() {
     const navigate = useNavigate();
@@ -62,12 +64,12 @@ export default function LabTabs() {
             name: ''
         }]
     });
-    async function fetchData() {
+    async function fetchPatients() {
         const result = await getAllPatientsWithStudies();
         setPatientsState({patients: result.data.data.getAllPatients});
     }
     useEffect(() => {
-        fetchData();
+        fetchPatients();
     }, []);
 
     const [studyState, setStudyState] = useState({
@@ -99,6 +101,81 @@ export default function LabTabs() {
             study: {
                 ...prevStudy.study,
                 studyName: e.target.value
+            }
+        }))
+    }
+
+
+
+    const [studySelect, setStudySelect] = React.useState('');
+    const handleStudySelectChange = (event) => {
+        setStudySelect(event.target.value);
+    };
+    const [studiesState, setStudiesState] = useState({
+        studies: [{
+            id: '',
+            studyName: ''
+        }]
+    });
+    async function fetchStudies() {
+        const result = await getAllStudies();
+        setStudiesState({studies: result.data.data.getAllStudies});
+    }
+    useEffect(() => {
+        fetchStudies();
+    }, []);
+
+
+
+
+    const [modalitySelect, setModalitySelect] = React.useState('');
+    const handleModalitySelectChange = (event) => {
+        setModalitySelect(event.target.value);
+    };
+    const [modalitiesState, setModalitiesState] = useState({
+        modalities: [{
+            id: '',
+            name: ''
+        }]
+    });
+    async function fetchModalities() {
+        const result = await getAllModalities();
+        setModalitiesState({modalities: result.data.data.getAllModalities});
+    }
+    useEffect(() => {
+        fetchModalities();
+    }, []);
+
+
+    const [seriesState, setSeriesState] = useState({
+        series: {
+            id: '',
+            seriesName: '',
+            createdAt: '',
+            updatedAt: '',
+        }
+    });
+    const [seriesErrorMessage, setSeriesErrorMessage] = useState("");
+    useEffect(() => {
+        // Set errorMessage only if text is equal or bigger than MAX_LENGTH
+        if (!seriesState.series.seriesName) {
+            setSeriesErrorMessage(
+                "Name cannot be empty"
+            );
+        }
+    }, [seriesState]);
+    useEffect(() => {
+        if (seriesState.series.seriesName) {
+            setSeriesErrorMessage("");
+        }
+    }, [seriesState, seriesErrorMessage]);
+
+
+    const onSeriesNameChange = (e) => {
+        setSeriesState(prevSeries => ({
+            series: {
+                ...prevSeries.series,
+                seriesName: e.target.value
             }
         }))
     }
@@ -189,7 +266,72 @@ export default function LabTabs() {
                         </Button>
                     </FormGroup>
                 </TabPanel>
-                <TabPanel value="3">Item Three</TabPanel>
+                <TabPanel value="3">
+                    <FormGroup>
+                        <FormControl sx={{my: 2}}>
+                            <InputLabel id="demo-simple-select-label">Patient</InputLabel>
+                            <Select
+                                labelId="demo-simple-select-label"
+                                id="demo-simpdle-select"
+                                value={patientSelect}
+                                label="Patient"
+                                onChange={handlePatientSelectChange}>
+                                {patientsState.patients.map((patient) => (
+                                    <MenuItem value={patient.id}>{patient.name}</MenuItem>
+                                ))}
+                            </Select>
+                        </FormControl>
+                        <FormControl sx={{my: 2}}>
+                            <InputLabel id="demo-simple-select-label">Study</InputLabel>
+                            <Select
+                                labelId="demo-simple-select-label"
+                                id="demo-simpdle-select"
+                                value={studySelect}
+                                label="Study"
+                                onChange={handleStudySelectChange}>
+                                {studiesState.studies.map((study) => (
+                                    <MenuItem value={study.id}>{study.studyName}</MenuItem>
+                                ))}
+                            </Select>
+                        </FormControl>
+                        <FormControl sx={{my: 2}}>
+                            <InputLabel id="demo-simple-select-label">Modality</InputLabel>
+                            <Select
+                                labelId="demo-simple-select-label"
+                                id="demo-simpdle-select"
+                                value={modalitySelect}
+                                label="Study"
+                                onChange={handleModalitySelectChange}>
+                                {modalitiesState.modalities.map((modality) => (
+                                    <MenuItem value={modality.id}>{modality.name}</MenuItem>
+                                ))}
+                            </Select>
+                        </FormControl>
+                        <FormControl sx={{my: 2}}>
+                            <TextField
+                                id="outlined-basic"
+                                label="Series Name"
+                                variant="outlined"
+                                error={seriesState.series.seriesName.length === 0}
+                                helperText={seriesErrorMessage}
+                                onChange={(e) => {
+                                    onSeriesNameChange(e)
+                                }}
+                                value={seriesState.series.seriesName}/>
+                        </FormControl>
+                        <Button
+                            variant="contained"
+                            color="success"
+                            disabled={seriesState.series.seriesName.length === 0}
+                            onClick={async () => {
+                                const newSeries = await createSeries(seriesState.series.seriesName, patientSelect, studySelect, modalitySelect)
+                                navigate(`/patient/${patientSelect}/study/${studySelect}/series/${newSeries.data.data.createSeries.id}`)
+                            }}
+                            startIcon={<SaveIcon />}>
+                            Save
+                        </Button>
+                    </FormGroup>
+                </TabPanel>
                 <TabPanel value="4">Item Three</TabPanel>
             </TabContext>
         </Grid>
