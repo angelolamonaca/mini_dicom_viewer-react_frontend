@@ -6,6 +6,7 @@ import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import {editStudy} from "../../services/studyService";
+import {editSeries} from "../../services/seriesService";
 
 var array = require('lodash/array');
 const columns = [
@@ -34,17 +35,16 @@ export default function DataTable() {
         console.log("Line 33 in Search.js", ids)
         switch (editedField) {
             case 'patient':
-                console.log('Patient edited');
                 await editPatient(ids[0], params.value)
                 fetchData()
                 break;
             case 'study':
-                console.log("Line 42 in Search.js", ids[1], params.value)
                 await editStudy(ids[1], params.value)
                 fetchData()
                 break;
             case 'series':
-                console.log('Series edited');
+                await editSeries(ids[2], params.value)
+                fetchData()
                 break;
             case 'file':
                 console.log('File edited');
