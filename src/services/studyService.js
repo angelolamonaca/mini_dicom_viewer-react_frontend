@@ -1,6 +1,6 @@
 const axios = require("axios")
 
-const apiURL = 'http://localhost:3302/api';
+const apiURL = 'http://172.17.0.1:3301/api';
 
 export const getAllStudies = () => {
     return axios({
