@@ -9,6 +9,7 @@ import SeriesEditor from "./pages/explorer/SeriesEditor";
 import SeriesExplorer from "./pages/explorer/SeriesExplorer";
 import FileEditor from "./pages/explorer/FileInfo";
 import Search from "./pages/search/Search"
+import Add from "./pages/add/Add"
 import './index.css'
 
 function App() {
@@ -26,6 +27,7 @@ function App() {
                     <Route path="patient/:idPatient/study/:idStudy/series/:idSeries/file/:idFile"
                            element={<FileEditor/>}/>
                     <Route path="search" element={<Search/>}/>
+                    <Route path="add" element={<Add/>}/>
                     <Route path="*" element={<Layout/>}/>
                 </Route>
             </Routes>

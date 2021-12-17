@@ -206,6 +206,7 @@ export default function DataTable(s) {
             })
         })
         await setDataState({data: data});
+        return data
     }
 
     useEffect(() => {
@@ -216,7 +217,13 @@ export default function DataTable(s) {
     const [intervalType, setIntervalType] = React.useState('patient');
 
     async function filterData(intervalType, interval) {
-        if (!interval[0] || !interval[1] || !intervalType) return;
+        console.log("Line 219 in Search.js", interval[0], interval[1], intervalType)
+        if (!interval[0] || !interval[1] || !intervalType) {
+            console.log("Line 221 in Search.js", "Data fetching!")
+            await fetchData()
+            return;
+        }
+        console.log("Line 225 in Search.js", "Start filtering data!")
         const filteredData = dataState.data.filter((item) => {
             switch (intervalType) {
                 case 'patient':
@@ -235,18 +242,21 @@ export default function DataTable(s) {
                     return true;
             }
         })
+        console.log("Line 244 in Search.js","Filtering data completed!")
         setDataState({data: filteredData});
     }
 
     const handleIntervalTypeChange = (event) => {
-        const intervalType = event.target.value
-        setIntervalType(event.target.value);
+        console.log("Line 249 in Search.js", "Interval type changed: "+event.target.value)
+        const newIntervalType = event.target.value
+        setIntervalType(newIntervalType);
         fetchData().then(() => {
-            filterData(intervalType, interval)
+            filterData(newIntervalType, interval)
         })
     };
 
     const handleIntervalChange = (newInterval) => {
+        console.log("Line 258 in Search.js", "Interval changed: "+newInterval)
         setInterval(newInterval)
         fetchData().then(() => {
             filterData(intervalType, newInterval)
