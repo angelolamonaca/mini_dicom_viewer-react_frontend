@@ -4,6 +4,7 @@ import {DataGrid} from '@mui/x-data-grid';
 import {getAllPatientsWithAll} from "../../services/patientService";
 import Box from "@mui/material/Box";
 
+var array = require('lodash/array');
 const columns = [
     {field: 'patientId', headerName: 'Patient ID', width: 100, editable: false},
     {field: 'patientName', headerName: 'Patient Name', width: 180, editable: true},
@@ -44,9 +45,48 @@ export default function DataTable() {
             const patients = result.data.data.getAllPatients;
             let data = [];
             patients.forEach(patient => {
+                data.push({
+                    id: patient.id.toString(),
+                    patientId: patient?.id,
+                    patientName: patient?.name,
+                    patientCreatedAt: new Date(parseInt(patient?.createdAt)).toLocaleString(),
+                    patientUpdatedAt: new Date(parseInt(patient?.updatedAt)).toLocaleString(),
+                })
                 patient.studies?.forEach(study => {
+                    const itemIndex = data.findIndex((item => item.id === patient.id.toString()));
+                    array.pull(data, data[itemIndex]);
+                    data.push({
+                        id: patient.id.toString()+study.id.toString(),
+                        patientId: patient?.id,
+                        patientName: patient?.name,
+                        patientCreatedAt: new Date(parseInt(patient?.createdAt)).toLocaleString(),
+                        patientUpdatedAt: new Date(parseInt(patient?.updatedAt)).toLocaleString(),
+                        studyId: study?.id,
+                        studyName: study?.studyName,
+                        studyCreatedAt: new Date(parseInt(study?.createdAt)).toLocaleString(),
+                        studyUpdatedAt: new Date(parseInt(study?.updatedAt)).toLocaleString(),
+                    })
                     study.series?.forEach(series => {
+                        const itemIndex = data.findIndex((item => item.id === patient.id.toString()+study.id.toString()));
+                        array.pull(data, data[itemIndex]);
+                        data.push({
+                            id: patient.id.toString()+study.id.toString()+series.id.toString(),
+                            patientId: patient?.id,
+                            patientName: patient?.name,
+                            patientCreatedAt: new Date(parseInt(patient?.createdAt)).toLocaleString(),
+                            patientUpdatedAt: new Date(parseInt(patient?.updatedAt)).toLocaleString(),
+                            studyId: study?.id,
+                            studyName: study?.studyName,
+                            studyCreatedAt: new Date(parseInt(study?.createdAt)).toLocaleString(),
+                            studyUpdatedAt: new Date(parseInt(study?.updatedAt)).toLocaleString(),
+                            seriesId: series?.id,
+                            seriesName: series?.seriesName,
+                            seriesCreatedAt: new Date(parseInt(series?.createdAt)).toLocaleString(),
+                            seriesUpdatedAt: new Date(parseInt(series?.updatedAt)).toLocaleString(),
+                        })
                         series.files?.forEach(file => {
+                            const itemIndex = data.findIndex((item => item.id === patient.id.toString()+study.id.toString()+series.id.toString()));
+                            array.pull(data, data[itemIndex]);
                             data.push({
                                 id: patient.id.toString()+study.id.toString()+series.id.toString()+file.id.toString(),
                                 patientId: patient?.id,
