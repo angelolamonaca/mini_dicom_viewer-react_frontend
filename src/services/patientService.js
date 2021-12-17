@@ -115,3 +115,17 @@ export const editPatient = (patientId, patientName) => {
         }
     });
 }
+
+export const deletePatient = (patientId) => {
+    return axios({
+        url: apiURL,
+        method: 'post',
+        data: {
+            query: `
+mutation DeletePatient {
+  deletePatient(id: ${patientId})
+}
+      `
+        }
+    });
+}

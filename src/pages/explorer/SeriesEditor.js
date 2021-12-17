@@ -6,9 +6,10 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import Toolbar from "@mui/material/Toolbar";
-import {editSeries, editSeriesModality, getSingleSeries} from "../../services/seriesService";
+import {deleteSeries, editSeries, editSeriesModality, getSingleSeries} from "../../services/seriesService";
 import {editPatient} from "../../services/patientService";
 import {getAllModalities} from "../../services/modalityService";
+import {deleteStudy} from "../../services/studyService";
 
 export default function SimpleContainer() {
     let modalities;
@@ -76,6 +77,11 @@ export default function SimpleContainer() {
         await editSeries(idSeries, seriesState.series.seriesName)
         await editSeriesModality(idSeries, seriesState.series.idModality)
         fetchData();
+    }
+
+    const deleteCurrentSeries = async () => {
+        await deleteSeries(idSeries)
+        navigate(`/`)
     }
 
     const onSeriesNameChange = (e) => {
@@ -183,12 +189,19 @@ export default function SimpleContainer() {
                     Save
                 </Button>
                 <Button
-                    variant="outlined"
-                    color="error"
+                    variant="contained"
+                    sx={{backgroundColor: '#ffbe00', borderColor: '#ffc000'}}
                     onClick={restore}>
                     Discard changes
                 </Button>
             </Stack>
+            <Button
+                sx={{marginTop: '1rem'}}
+                variant="outlined"
+                color={"error"}
+                onClick={deleteCurrentSeries}>
+                DELETE SERIES
+            </Button>
         </Grid>
     );
 }

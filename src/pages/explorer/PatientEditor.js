@@ -2,7 +2,7 @@ import * as React from 'react';
 import {useEffect, useState} from 'react';
 import {Button, FormControl, Grid, Stack, TextField} from "@mui/material";
 import {useNavigate, useParams} from "react-router";
-import {editPatient, getSinglePatient} from "../../services/patientService";
+import {deletePatient, editPatient, getSinglePatient} from "../../services/patientService";
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
@@ -51,6 +51,11 @@ export default function SimpleContainer() {
     }
     const save = () => {
         editPatient(idPatient, patientState.patient.name)
+        fetchData();
+    }
+    const deleteCurrentPatient = () => {
+        deletePatient(idPatient, patientState.patient.name)
+        navigate(`/`)
     }
 
     const onNameChange = (e) => {
@@ -142,12 +147,19 @@ export default function SimpleContainer() {
                     Save
                 </Button>
                 <Button
-                    variant="outlined"
-                    color="error"
+                    variant="contained"
+                    sx={{backgroundColor: '#ffbe00', borderColor: '#ffc000'}}
                     onClick={restore}>
                     Discard changes
                 </Button>
             </Stack>
+            <Button
+                sx={{marginTop: '1rem'}}
+                variant="outlined"
+                color={"error"}
+                onClick={deleteCurrentPatient}>
+                DELETE PATIENT
+            </Button>
         </Grid>
     );
 }

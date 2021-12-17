@@ -6,7 +6,7 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import Toolbar from "@mui/material/Toolbar";
-import {editStudy, getSingleStudy} from "../../services/studyService";
+import {deleteStudy, editStudy, getSingleStudy} from "../../services/studyService";
 import {editSeries} from "../../services/seriesService";
 
 export default function SimpleContainer() {
@@ -52,10 +52,14 @@ export default function SimpleContainer() {
         fetchData();
     }
 
-
     const save = async () => {
         await editStudy(idStudy, studyState.study.studyName)
         fetchData();
+    }
+
+    const deleteCurrentStudy = async () => {
+        await deleteStudy(idStudy)
+        navigate(`/`)
     }
 
     const onstudyNameChange = (e) => {
@@ -136,12 +140,19 @@ export default function SimpleContainer() {
                     Save
                 </Button>
                 <Button
-                    variant="outlined"
-                    color="error"
+                    variant="contained"
+                    sx={{backgroundColor: '#ffbe00', borderColor: '#ffc000'}}
                     onClick={restore}>
                     Discard changes
                 </Button>
             </Stack>
+            <Button
+                sx={{marginTop: '1rem'}}
+                variant="outlined"
+                color={"error"}
+                onClick={deleteCurrentStudy}>
+                DELETE STUDY
+            </Button>
         </Grid>
     );
 }

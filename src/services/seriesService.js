@@ -75,3 +75,18 @@ mutation EditSeriesModality {
         }
     });
 }
+
+
+export const deleteSeries = (seriesId) => {
+    return axios({
+        url: apiURL,
+        method: 'post',
+        data: {
+            query: `
+mutation DeleteSeries {
+  deleteSeries(id: ${seriesId})
+}
+      `
+        }
+    });
+}
