@@ -7,6 +7,7 @@ import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import {editStudy} from "../../services/studyService";
 import {editSeries} from "../../services/seriesService";
+import {editFile} from "../../services/fileService";
 
 var array = require('lodash/array');
 const columns = [
@@ -47,7 +48,8 @@ export default function DataTable() {
                 fetchData()
                 break;
             case 'file':
-                console.log('File edited');
+                await editFile(ids[3], params.value)
+                fetchData()
                 break;
             default:
                 console.log(`Sorry, we cannot get the change.`);

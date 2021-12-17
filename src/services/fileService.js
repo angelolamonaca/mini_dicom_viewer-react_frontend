@@ -1,6 +1,6 @@
 const axios = require("axios")
 
-const apiURL = 'http://localhost:3301/api';
+const apiURL = 'http://localhost:3302/api';
 
 export const getAllFiles = () => {
     return axios({
@@ -37,6 +37,20 @@ export const getSingleFile = (idFile) => {
             updatedAt
         }
        }
+      `
+        }
+    });
+}
+
+export const editFile = (fileId, filePath) => {
+    return axios({
+        url: apiURL,
+        method: 'post',
+        data: {
+            query: `
+mutation EditFile {
+  editFile(id: ${fileId}, filePath: "${filePath}")
+}
       `
         }
     });
