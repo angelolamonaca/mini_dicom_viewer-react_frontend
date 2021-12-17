@@ -2,7 +2,7 @@ import * as React from 'react';
 import {useEffect, useState} from 'react';
 import {Button, FormControl, Grid, Stack, TextField} from "@mui/material";
 import {useNavigate, useParams} from "react-router";
-import {getSinglePatient} from "../../services/patientService";
+import {editPatient, getSinglePatient} from "../../services/patientService";
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
@@ -42,13 +42,16 @@ export default function SimpleContainer() {
         }
     }, [patientState, errorMessage]);
 
+    async function fetchData() {
+        const result = await getSinglePatient(idPatient);
+        setPatientState({patient: result.data.data.getSinglePatient});
+    }
     const restore = () => {
-        async function fetchData() {
-            const result = await getSinglePatient(idPatient);
-            setPatientState({patient: result.data.data.getSinglePatient});
-        }
-
         fetchData();
+    }
+    const save = () => {
+        console.log("Line 53 in PatientEditor.js", idPatient, patientState.patient.name)
+        editPatient(idPatient, patientState.patient.name)
     }
 
     const onNameChange = (e) => {
@@ -114,23 +117,34 @@ export default function SimpleContainer() {
                 </FormControl>
             </div>
             <div>
-                <TextField sx={{margin: '25px'}} id="outlined-basic" label="Created At" variant="outlined"
-                           value={new Date(parseInt(patientState.patient.createdAt)).toLocaleString()} disabled={true}/>
+                <TextField
+                    sx={{margin: '25px'}}
+                    id="outlined-basic"
+                    label="Created At"
+                    variant="outlined"
+                    value={new Date(parseInt(patientState.patient.createdAt)).toLocaleString()} disabled={true}/>
             </div>
             <div>
-                <TextField sx={{margin: '25px'}} id="outlined-basic" label="Updated At" variant="outlined"
-                           value={new Date(parseInt(patientState.patient.updatedAt)).toLocaleString()} disabled={true}/>
+                <TextField
+                    sx={{margin: '25px'}}
+                    id="outlined-basic"
+                    label="Updated At"
+                    variant="outlined"
+                    value={new Date(parseInt(patientState.patient.updatedAt)).toLocaleString()} disabled={true}/>
             </div>
 
             <Stack direction="row" spacing={2}>
-                <Button variant="contained" color="success">
+                <Button
+                    variant="contained"
+                    color="success"
+                    onClick={save}>
                     Save
                 </Button>
                 <Button
                     variant="outlined"
                     color="error"
                     onClick={restore}>
-                    Restore
+                    Discard changes
                 </Button>
             </Stack>
         </Grid>

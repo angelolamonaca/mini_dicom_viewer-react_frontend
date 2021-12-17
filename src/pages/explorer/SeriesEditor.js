@@ -127,7 +127,7 @@ export default function SimpleContainer() {
                     variant="outlined"
                     color="error"
                     onClick={restore}>
-                    Restore
+                    Discard changes
                 </Button>
             </Stack>
         </Grid>
