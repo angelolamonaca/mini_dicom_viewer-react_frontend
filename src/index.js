@@ -8,7 +8,11 @@ import StudyExplorer from "./pages/explorer/StudyExplorer";
 import SeriesEditor from "./pages/explorer/SeriesEditor";
 import SeriesExplorer from "./pages/explorer/SeriesExplorer";
 import FileEditor from "./pages/explorer/FileInfo";
-import NoPage from "./pages/explorer/NoPage";
+import Search from "./pages/search/Search"
+import SearchPatients from "./pages/search/SearchPatients"
+import SearchStudies from "./pages/search/SearchStudies"
+import SearchSeries from "./pages/search/SearchSeries"
+import SearchFiles from "./pages/search/SearchFiles"
 import './index.css'
 
 function App() {
@@ -25,7 +29,12 @@ function App() {
                            element={<SeriesExplorer/>}/>
                     <Route path="patient/:idPatient/study/:idStudy/series/:idSeries/file/:idFile"
                            element={<FileEditor/>}/>
-                    <Route path="*" element={<NoPage/>}/>
+                    <Route path="search" element={<Search/>}/>
+                    <Route path="search/patients" element={<SearchPatients/>}/>
+                    <Route path="search/studies" element={<SearchStudies/>}/>
+                    <Route path="search/series" element={<SearchSeries/>}/>
+                    <Route path="search/files" element={<SearchFiles/>}/>
+                    <Route path="*" element={<Layout/>}/>
                 </Route>
             </Routes>
         </BrowserRouter>

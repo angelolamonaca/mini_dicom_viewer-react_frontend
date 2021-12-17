@@ -11,7 +11,7 @@ export const getAllSeries = () => {
       query GetAllSeries {
         getAllSeries {
             id
-            name
+            seriesName
             createdAt
             updatedAt
         }

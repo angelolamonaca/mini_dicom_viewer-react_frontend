@@ -42,24 +42,6 @@ export default function SimpleContainer() {
         }
     }, [fileState, errorMessage]);
 
-    const restore = () => {
-        async function fetchData() {
-            const result = await getSingleFile(idFile);
-            setFileState({file: result.data.data.getSingleFile});
-        }
-
-        fetchData();
-    }
-
-    const onfileNameChange = (e) => {
-        setFileState(prevFile => ({
-            file: {
-                ...prevFile.file,
-                filePath: e.target.value
-            }
-        }))
-    }
-
     const navigate = useNavigate();
     const goBack = () => navigate(`/patient/${idPatient}/study/${idStudy}/series/${idSeries}/explorer`);
 

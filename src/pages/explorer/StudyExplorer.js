@@ -64,7 +64,6 @@ export default function TitlebarImageList() {
     const navigate = useNavigate();
     const goBack = () => navigate('/');
     const goStudyEdit = () => navigate(`/patient/${idPatient}/study/${idStudy}`);
-    const goSeriesDetails = (idSeries) => navigate(`/patient/${idPatient}/study/${idStudy}/series/${idSeries}`);
     const goSeriesExplorer = (idSeries) => navigate(`/patient/${idPatient}/study/${idStudy}/series/${idSeries}/explorer`);
     return (
         <Grid

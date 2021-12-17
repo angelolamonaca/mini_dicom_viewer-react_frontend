@@ -6,9 +6,11 @@ import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
 import AccountTreeOutlinedIcon from '@mui/icons-material/AccountTreeOutlined';
 import {useNavigate} from "react-router";
 import FolderOpenIcon from '@mui/icons-material/FolderOpen';
+import {useState} from "react";
 
 export default function SimpleBottomNavigation() {
-    const [value, setValue] = React.useState(0);
+    const pathName = window.location.pathname
+    const [value, setValue] = useState(pathName==='/' ? 0 : 1);
     const navigate = useNavigate();
     const goExplore = () => navigate('/');
     const goStatistics = () => navigate('/search');

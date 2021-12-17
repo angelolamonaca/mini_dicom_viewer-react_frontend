@@ -62,7 +62,6 @@ export default function SimpleContainer() {
 
     const navigate = useNavigate();
     const goBack = () => navigate(`/patient/${idPatient}/study/${idStudy}/explorer`);
-    const goSeriesDetails = () => navigate(`explorer/`);
 
     return (
         <Grid

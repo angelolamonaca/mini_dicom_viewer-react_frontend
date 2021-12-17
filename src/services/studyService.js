@@ -11,7 +11,7 @@ export const getAllStudies = () => {
       query GetAllStudies {
         getAllStudies {
             id
-            name
+            studyName
             createdAt
             updatedAt
         }
