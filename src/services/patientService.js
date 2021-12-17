@@ -102,6 +102,23 @@ export const getSinglePatient = (patientId) => {
     });
 }
 
+export const createPatient = (patientName) => {
+    return axios({
+        url: apiURL,
+        method: 'post',
+        data: {
+            query: `
+      mutation CreatePatient {
+  createPatient(name: "${patientName}") {
+  id
+  name
+  }
+}
+      `
+        }
+    });
+}
+
 export const editPatient = (patientId, patientName) => {
     return axios({
         url: apiURL,

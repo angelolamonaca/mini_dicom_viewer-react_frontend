@@ -24,7 +24,7 @@ import {deleteStudy} from "../../services/studyService";
 
 export default function PatientsTable() {
 
-    const [patientsState, setPatientsStateState] = useState({
+    const [patientsState, setPatientsState] = useState({
         patients: [{
             id: '',
             name: '',
@@ -35,7 +35,7 @@ export default function PatientsTable() {
     });
     async function fetchData() {
         const result = await getAllPatientsWithStudies();
-        setPatientsStateState({patients: result.data.data.getAllPatients});
+        setPatientsState({patients: result.data.data.getAllPatients});
     }
     useEffect(() => {
         fetchData();

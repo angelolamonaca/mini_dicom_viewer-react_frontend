@@ -67,6 +67,23 @@ export const getSingleStudyWithSeries = (studyId) => {
     });
 }
 
+export const createStudy = (studyName, idPatient) => {
+    return axios({
+        url: apiURL,
+        method: 'post',
+        data: {
+            query: `
+mutation CreateStudy {
+  createStudy(studyName: "${studyName}", idPatient: ${idPatient}) {
+  id
+  studyName
+  }
+}
+      `
+        }
+    });
+}
+
 export const editStudy = (studyId, studyName) => {
     return axios({
         url: apiURL,
