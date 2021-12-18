@@ -42,6 +42,28 @@ export const getSingleFile = (idFile) => {
     });
 }
 
+export const createFile = (filePath, idPatient, idStudy, idSeries) => {
+    return axios({
+        url: apiURL,
+        method: 'post',
+        data: {
+            query: `
+mutation CreateFile {
+  createFile(
+  filePath: "${filePath}"
+  idPatient: ${idPatient}
+  idStudy: ${idStudy}
+  idSeries: ${idSeries}
+  ) {
+  id
+  filePath
+  }
+}
+      `
+        }
+    });
+}
+
 export const editFile = (fileId, filePath) => {
     return axios({
         url: apiURL,

@@ -12,7 +12,8 @@ import {createPatient, getAllPatientsWithStudies} from "../../services/patientSe
 import {useNavigate} from "react-router";
 import {createStudy, getAllStudies} from "../../services/studyService";
 import {getAllModalities} from "../../services/modalityService";
-import {createSeries} from "../../services/seriesService";
+import {createSeries, getAllSeries} from "../../services/seriesService";
+import {createFile} from "../../services/fileService";
 
 export default function LabTabs() {
     const navigate = useNavigate();
@@ -179,6 +180,64 @@ export default function LabTabs() {
             }
         }))
     }
+
+
+
+
+
+
+    const [seriesSelect, setSeriesSelect] = React.useState('');
+    const handleSeriesSelectChange = (event) => {
+        setSeriesSelect(event.target.value);
+    };
+    const [seriesesState, setSeriesesState] = useState({
+        series: [{
+            id: '',
+            name: ''
+        }]
+    });
+    async function fetchSeries() {
+        const result = await getAllSeries();
+        setSeriesesState({series: result.data.data.getAllSeries});
+    }
+    useEffect(() => {
+        fetchSeries();
+    }, []);
+
+
+
+
+    const [fileState, setFileState] = useState({
+        file: {
+            id: '',
+            filePath: ''
+        }
+    });
+    const [fileErrorMessage, setFileErrorMessage] = useState("");
+    useEffect(() => {
+        // Set errorMessage only if text is equal or bigger than MAX_LENGTH
+        if (!fileState.file.filePath) {
+            setFileErrorMessage(
+                "Name cannot be empty"
+            );
+        }
+    }, [fileState]);
+    useEffect(() => {
+        if (fileState.file.filePath) {
+            setFileErrorMessage("");
+        }
+    }, [fileState, fileErrorMessage]);
+
+
+    const onFilePathChange = (e) => {
+        setFileState(prevFile => ({
+            file: {
+                ...prevFile.file,
+                filePath: e.target.value
+            }
+        }))
+    }
+
     return (
         <Grid
             marginBottom={'112px'}
@@ -332,7 +391,71 @@ export default function LabTabs() {
                         </Button>
                     </FormGroup>
                 </TabPanel>
-                <TabPanel value="4">Item Three</TabPanel>
+                <TabPanel value="4">
+                    <FormGroup>
+                        <FormControl sx={{my: 2}}>
+                            <InputLabel id="demo-simple-select-label">Patient</InputLabel>
+                            <Select
+                                labelId="demo-simple-select-label"
+                                id="demo-simpdle-select"
+                                value={patientSelect}
+                                label="Patient"
+                                onChange={handlePatientSelectChange}>
+                                {patientsState.patients.map((patient) => (
+                                    <MenuItem value={patient.id}>{patient.name}</MenuItem>
+                                ))}
+                            </Select>
+                        </FormControl>
+                        <FormControl sx={{my: 2}}>
+                            <InputLabel id="demo-simple-select-label">Study</InputLabel>
+                            <Select
+                                labelId="demo-simple-select-label"
+                                id="demo-simpdle-select"
+                                value={studySelect}
+                                label="Study"
+                                onChange={handleStudySelectChange}>
+                                {studiesState.studies.map((study) => (
+                                    <MenuItem value={study.id}>{study.studyName}</MenuItem>
+                                ))}
+                            </Select>
+                        </FormControl>
+                        <FormControl sx={{my: 2}}>
+                            <InputLabel id="demo-simple-select-label">Series</InputLabel>
+                            <Select
+                                labelId="demo-simple-select-label"
+                                id="demo-simpdle-select"
+                                value={seriesSelect}
+                                label="Study"
+                                onChange={handleSeriesSelectChange}>
+                                {seriesesState.series.map((series) => (
+                                    <MenuItem value={series.id}>{series.seriesName}</MenuItem>
+                                ))}
+                            </Select>
+                        </FormControl>
+                        <FormControl sx={{my: 2}}>
+                            <TextField
+                                id="outlined-basic"
+                                label="Series Name"
+                                variant="outlined"
+                                error={fileState.file.filePath.length === 0}
+                                helperText={seriesErrorMessage}
+                                onChange={(e) => {
+                                    onFilePathChange(e)
+                                }}
+                                value={fileState.file.filePath}/>
+                        </FormControl>
+                        <Button
+                            variant="contained"
+                            color="success"
+                            disabled={fileState.file.filePath.length === 0}
+                            onClick={async () => {
+                                const newFile = await createFile(seriesState.series.seriesName, patientSelect, studySelect, seriesSelect)
+                                navigate(`/patient/${patientSelect}/study/${studySelect}/series/${seriesSelect}/file/${newFile.data.data.createFile.id}`)
+                            }}
+                            startIcon={<SaveIcon />}>
+                            Save
+                        </Button>
+                    </FormGroup></TabPanel>
             </TabContext>
         </Grid>
     );
