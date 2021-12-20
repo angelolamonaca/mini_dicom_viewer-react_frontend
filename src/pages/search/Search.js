@@ -14,7 +14,8 @@ import LocalizationProvider from '@mui/lab/LocalizationProvider';
 import CancelIcon from '@mui/icons-material/Cancel';
 import {Button, FormControl, InputLabel, MenuItem, Select, Stack, TextField} from "@mui/material";
 
-var array = require('lodash/array');
+const array = require('lodash/array');
+
 const columns = [
     {field: 'patientId', headerName: 'Patient ID', width: 100, editable: false},
     {field: 'patientName', headerName: 'Patient Name', width: 180, editable: true},
@@ -24,7 +25,7 @@ const columns = [
     {field: 'studyCreatedAt', headerName: 'Study Created at', width: 500, editable: false},
     {field: 'seriesId', headerName: 'Series ID', width: 100, editable: false},
     {field: 'seriesName', headerName: 'Series Name', width: 180, editable: true},
-    {field: 'seriesCreatedAt', headerName: 'SeriesCreated at', width: 500, editable: false},
+    {field: 'seriesCreatedAt', headerName: 'Series Created at', width: 500, editable: false},
     {field: 'modalityId', headerName: 'Modality ID', width: 100, editable: false},
     {field: 'modalityName', headerName: 'Modality Name', width: 180, editable: true},
     {field: 'fileId', headerName: 'File ID', width: 100, editable: false},
@@ -124,7 +125,7 @@ export default function DataTable(s) {
         let data = [];
         for await (const patient of patients) {
             data.push({
-                id: patient.id.toString(),
+                id: patient?.id.toString(),
                 patientId: patient?.id,
                 patientName: patient?.name,
                 patientCreatedAt: new Date(parseInt(patient?.createdAt)),
@@ -211,7 +212,7 @@ export default function DataTable(s) {
     }, []);
 
     async function filterData(data, localIntervalType, localInterval) {
-        if (!localInterval[0] || !localInterval[1] || !localIntervalType) return;
+        if (!localInterval[0] || !localInterval[1] || !localIntervalType) return data;
 
         return data.filter((item) => {
             switch (localIntervalType) {
@@ -236,21 +237,24 @@ export default function DataTable(s) {
     const handleIntervalTypeChange = async (event) => {
         const newIntervalType = event.target.value
         setIntervalType(newIntervalType);
-        await fetchData().then(async (data) => {
-            filterData(data, newIntervalType, interval).then(async (filteredData) => {
-                await setDataState({data: filteredData});
-            })
+        fetchData().then((data) => {
+            filterData(data, newIntervalType, interval)
+                .then((filteredData) => {
+                    setDataState({data: filteredData});
+                })
         })
     };
 
-    const handleIntervalChange = async (newInterval) => {
+    const handleIntervalChange = (newInterval) => {
         if (!newInterval[0] || !newInterval[1]) return;
         setInterval(newInterval)
-        await fetchData().then(async (data) => {
-            filterData(data, intervalType, newInterval).then(async (filteredData) => {
-                await setDataState({data: filteredData});
+        fetchData()
+            .then((data) => {
+                filterData(data, intervalType, newInterval)
+                    .then((filteredData) => {
+                        setDataState({data: filteredData});
+                    })
             })
-        })
     };
 
     const resetDatePicker = async () => {

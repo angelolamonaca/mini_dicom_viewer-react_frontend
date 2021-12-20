@@ -10,16 +10,10 @@ import SaveIcon from '@mui/icons-material/Save';
 import CancelIcon from '@mui/icons-material/Cancel';
 import DeleteIcon from '@mui/icons-material/Delete';
 import {deleteSeries, editSeries, editSeriesModality, getSingleSeries} from "../../services/seriesService";
-import {editPatient} from "../../services/patientService";
 import {getAllModalities} from "../../services/modalityService";
-import {deleteStudy} from "../../services/studyService";
 
 export default function SimpleContainer() {
-    let modalities;
-    async function fetchModalities() {
-        const modalitiesResult = await getAllModalities();
-        modalities = modalitiesResult.data.data.getAllModalities;
-    }
+
     const {idPatient, idStudy, idSeries} = useParams();
     const [seriesState, setSeriesState] = useState({
         series: {
@@ -42,6 +36,7 @@ export default function SimpleContainer() {
         const result = await getAllModalities();
         setModalitiesState({modalities: result.data.data.getAllModalities});
     }
+
     useEffect(() => {
         async function fetchData() {
             await fetchModalities()
@@ -189,14 +184,14 @@ export default function SimpleContainer() {
                     color="success"
                     onClick={save}
                     disabled={!seriesState.series.idModality || seriesState.series.seriesName.length === 0}
-                    startIcon={<SaveIcon />}>
+                    startIcon={<SaveIcon/>}>
                     Save
                 </Button>
                 <Button
                     variant="contained"
                     color={"warning"}
                     onClick={restore}
-                    startIcon={<CancelIcon />}>
+                    startIcon={<CancelIcon/>}>
                     Discard changes
                 </Button>
             </Stack>
@@ -205,7 +200,7 @@ export default function SimpleContainer() {
                 variant="outlined"
                 color={"error"}
                 onClick={deleteCurrentSeries}
-                startIcon={<DeleteIcon />}>
+                startIcon={<DeleteIcon/>}>
                 DELETE SERIES
             </Button>
         </Grid>

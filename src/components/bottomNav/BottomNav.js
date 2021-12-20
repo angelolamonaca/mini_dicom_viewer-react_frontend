@@ -1,17 +1,16 @@
 import * as React from 'react';
+import {useState} from 'react';
 import BottomNavigation from '@mui/material/BottomNavigation';
 import BottomNavigationAction from '@mui/material/BottomNavigationAction';
 import Paper from "@mui/material/Paper";
 import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
-import AccountTreeOutlinedIcon from '@mui/icons-material/AccountTreeOutlined';
 import {useNavigate} from "react-router";
 import FolderOpenIcon from '@mui/icons-material/FolderOpen';
-import {useState} from "react";
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 
 export default function SimpleBottomNavigation() {
     const pathName = window.location.pathname
-    const [value, setValue] = useState(pathName==='/search' ? 1 : pathName==='/add' ? 2 : 0);
+    const [value, setValue] = useState(pathName === '/search' ? 1 : pathName === '/add' ? 2 : 0);
     const navigate = useNavigate();
     const goExplorer = () => navigate('/');
     const goSearch = () => navigate('/search');

@@ -10,7 +10,6 @@ import {deleteStudy, editStudy, getSingleStudy} from "../../services/studyServic
 import SaveIcon from '@mui/icons-material/Save';
 import CancelIcon from '@mui/icons-material/Cancel';
 import DeleteIcon from '@mui/icons-material/Delete';
-import {editSeries} from "../../services/seriesService";
 
 export default function SimpleContainer() {
     const {idPatient, idStudy} = useParams();
@@ -140,14 +139,14 @@ export default function SimpleContainer() {
                     color="success"
                     disabled={studyState.study.studyName.length === 0}
                     onClick={save}
-                    startIcon={<SaveIcon />}>
+                    startIcon={<SaveIcon/>}>
                     Save
                 </Button>
                 <Button
                     variant="contained"
                     color={"warning"}
                     onClick={restore}
-                    startIcon={<CancelIcon />}>
+                    startIcon={<CancelIcon/>}>
                     Discard changes
                 </Button>
             </Stack>
@@ -156,7 +155,7 @@ export default function SimpleContainer() {
                 variant="outlined"
                 color={"error"}
                 onClick={deleteCurrentStudy}
-                startIcon={<DeleteIcon />}>
+                startIcon={<DeleteIcon/>}>
                 DELETE STUDY
             </Button>
         </Grid>

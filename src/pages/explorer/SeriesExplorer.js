@@ -99,7 +99,8 @@ export default function TitlebarImageList() {
             </Typography>
             <ImageList cols={isMobile ? 1 : 3}>
                 {seriesState.series.files?.map((file) => (
-                    <ImageListItem key={file.id} sx={{width: isMobile ? '60vw' : '25vw', marginInline: '3vw', marginBottom: '3vw'}}>
+                    <ImageListItem key={file.id}
+                                   sx={{width: isMobile ? '60vw' : '25vw', marginInline: '3vw', marginBottom: '3vw'}}>
                         <img
                             src={fakeImages[getRandomInt(3)]}
                             alt={file.id}

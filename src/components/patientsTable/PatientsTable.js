@@ -33,10 +33,12 @@ export default function PatientsTable() {
             studies: [{id: '', studyName: '', createdAt: ''}]
         }]
     });
+
     async function fetchData() {
         const result = await getAllPatientsWithStudies();
         setPatientsState({patients: result.data.data.getAllPatients});
     }
+
     useEffect(() => {
         fetchData();
     }, []);

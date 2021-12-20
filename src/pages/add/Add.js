@@ -65,10 +65,12 @@ export default function LabTabs() {
             name: ''
         }]
     });
+
     async function fetchPatients() {
         const result = await getAllPatientsWithStudies();
         setPatientsState({patients: result.data.data.getAllPatients});
     }
+
     useEffect(() => {
         fetchPatients();
     }, []);
@@ -107,7 +109,6 @@ export default function LabTabs() {
     }
 
 
-
     const [studySelect, setStudySelect] = React.useState('');
     const handleStudySelectChange = (event) => {
         setStudySelect(event.target.value);
@@ -118,15 +119,15 @@ export default function LabTabs() {
             studyName: ''
         }]
     });
+
     async function fetchStudies() {
         const result = await getAllStudies();
         setStudiesState({studies: result.data.data.getAllStudies});
     }
+
     useEffect(() => {
         fetchStudies();
     }, []);
-
-
 
 
     const [modalitySelect, setModalitySelect] = React.useState('');
@@ -139,10 +140,12 @@ export default function LabTabs() {
             name: ''
         }]
     });
+
     async function fetchModalities() {
         const result = await getAllModalities();
         setModalitiesState({modalities: result.data.data.getAllModalities});
     }
+
     useEffect(() => {
         fetchModalities();
     }, []);
@@ -182,10 +185,6 @@ export default function LabTabs() {
     }
 
 
-
-
-
-
     const [seriesSelect, setSeriesSelect] = React.useState('');
     const handleSeriesSelectChange = (event) => {
         setSeriesSelect(event.target.value);
@@ -196,15 +195,15 @@ export default function LabTabs() {
             name: ''
         }]
     });
+
     async function fetchSeries() {
         const result = await getAllSeries();
         setSeriesesState({series: result.data.data.getAllSeries});
     }
+
     useEffect(() => {
         fetchSeries();
     }, []);
-
-
 
 
     const [fileState, setFileState] = useState({
@@ -281,7 +280,7 @@ export default function LabTabs() {
                                 const newPatient = await createPatient(patientState.patient.name)
                                 navigate(`/patient/${newPatient.data.data.createPatient.id}`)
                             }}
-                            startIcon={<SaveIcon />}>
+                            startIcon={<SaveIcon/>}>
                             Save
                         </Button>
                     </FormGroup>
@@ -320,7 +319,7 @@ export default function LabTabs() {
                                 const newStudy = await createStudy(studyState.study.studyName, patientSelect)
                                 navigate(`/patient/${patientSelect}/study/${newStudy.data.data.createStudy.id}`)
                             }}
-                            startIcon={<SaveIcon />}>
+                            startIcon={<SaveIcon/>}>
                             Save
                         </Button>
                     </FormGroup>
@@ -386,7 +385,7 @@ export default function LabTabs() {
                                 const newSeries = await createSeries(seriesState.series.seriesName, patientSelect, studySelect, modalitySelect)
                                 navigate(`/patient/${patientSelect}/study/${studySelect}/series/${newSeries.data.data.createSeries.id}`)
                             }}
-                            startIcon={<SaveIcon />}>
+                            startIcon={<SaveIcon/>}>
                             Save
                         </Button>
                     </FormGroup>
@@ -452,7 +451,7 @@ export default function LabTabs() {
                                 const newFile = await createFile(seriesState.series.seriesName, patientSelect, studySelect, seriesSelect)
                                 navigate(`/patient/${patientSelect}/study/${studySelect}/series/${seriesSelect}/file/${newFile.data.data.createFile.id}`)
                             }}
-                            startIcon={<SaveIcon />}>
+                            startIcon={<SaveIcon/>}>
                             Save
                         </Button>
                     </FormGroup></TabPanel>

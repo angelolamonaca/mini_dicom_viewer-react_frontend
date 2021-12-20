@@ -49,6 +49,7 @@ export default function SimpleContainer() {
         const result = await getSinglePatient(idPatient);
         setPatientState({patient: result.data.data.getSinglePatient});
     }
+
     const restore = () => {
         fetchData();
     }
@@ -147,14 +148,14 @@ export default function SimpleContainer() {
                     color="success"
                     disabled={patientState.patient.name.length === 0}
                     onClick={save}
-                    startIcon={<SaveIcon />}>
+                    startIcon={<SaveIcon/>}>
                     Save
                 </Button>
                 <Button
                     variant="contained"
                     color={"warning"}
                     onClick={restore}
-                    startIcon={<CancelIcon />}>
+                    startIcon={<CancelIcon/>}>
                     Discard changes
                 </Button>
             </Stack>
@@ -163,7 +164,7 @@ export default function SimpleContainer() {
                 variant="outlined"
                 color={"error"}
                 onClick={deleteCurrentPatient}
-                startIcon={<DeleteIcon />}>
+                startIcon={<DeleteIcon/>}>
                 DELETE PATIENT
             </Button>
         </Grid>
