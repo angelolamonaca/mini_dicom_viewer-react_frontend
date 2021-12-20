@@ -434,7 +434,7 @@ export default function LabTabs() {
                         <FormControl sx={{my: 2}}>
                             <TextField
                                 id="outlined-basic"
-                                label="Series Name"
+                                label="File Name"
                                 variant="outlined"
                                 error={fileState.file.filePath.length === 0}
                                 helperText={seriesErrorMessage}

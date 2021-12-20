@@ -258,9 +258,12 @@ export default function DataTable(s) {
     };
 
     const resetDatePicker = async () => {
-        await setInterval([null, null])
-        await fetchData()
+        await setInterval([null, null]);
+        fetchData().then((data) => {
+            setDataState({data: data});
+        })
     }
+
     return (
         <Box style={{height: 'calc(100vh - 56px - 56px - 56px - 36px)', marginBottom: '56px', width: '100%'}}>
             <Toolbar sx={{marginTop: '10px', marginBottom: '10px'}}>
